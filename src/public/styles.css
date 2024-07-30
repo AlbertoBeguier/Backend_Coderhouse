@@ -1,0 +1,212 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.titulo-index {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgb(10, 10, 104);
+}
+
+.producto {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+}
+
+.producto-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.thumbnail {
+  width: 300px; /* Ajusta el tamaño de la imagen */
+  height: auto;
+  margin-right: 16px; /* Espacio entre la imagen y los detalles */
+}
+
+.caracteristicas {
+  display: flex;
+  flex-direction: row; /* Asegúrate de que los elementos estén en fila */
+  align-items: center; /* Alinea los elementos verticalmente al centro */
+  margin-top: 10px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+
+.detalles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-image,
+.footer-image {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
+}
+
+p {
+  margin: 20px;
+  text-align: justify;
+}
+
+/* Nuevos estilos para la sección de bienvenida */
+.welcome-section {
+  margin: 20px;
+}
+
+.content-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.image-container {
+  flex: 1;
+}
+
+.text-container {
+  flex: 2;
+  margin-left: 80px;
+}
+
+.header-image {
+  width: 120%;
+  max-width: 600px; /* Tamaño máximo para la imagen */
+  height: 590px;
+  margin-bottom: 80px;
+}
+
+button {
+  margin-top: 1px;
+}
+
+/* Estilos específicos para el producto con imagen a la derecha */
+.producto-info h2,
+.producto-info p {
+  margin: 0 16px 0 0;
+}
+
+.derecha-thumbnail {
+  width: 150px; /* Tamaño más pequeño para la imagen */
+}
+
+.hidden {
+  display: none;
+}
+
+/* Estilos específicos para centrar el botón */
+.boton-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.nombre-productos {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: rgb(214, 64, 9);
+}
+
+.parrafo-home {
+  text-align: justify;
+  margin: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(45, 45, 139);
+  text-indent: 2em;
+}
+
+.parrafo-home::first-letter {
+  font-size: 1.3em;
+  font-family: "Zapf Chancery", "Hoefler Text", "Times New Roman", Times, serif;
+  color: rgb(5, 5, 85);
+}
+
+/* Estilos específicos para la vista del producto detallado */
+.producto-detalle {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.producto-info-detalle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.imagen-detalle {
+  flex: 1;
+}
+
+.thumbnail-detalle {
+  width: 350px; /* Tamaño de la imagen */
+  height: auto;
+}
+
+.texto-detalle {
+  flex: 2;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.titulo-detalle {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  text-align: center;
+  color: rgb(10, 10, 104);
+}
+
+.descripcion-detalle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  animation: colorChange 10s infinite; /* Animación continua de cambio de color */
+  transition: color 0.5s ease; /* Transición de color suave */
+}
+
+@keyframes colorChange {
+  0% {
+    color: #ff6347;
+  } /* Primer color */
+  25% {
+    color: #ffd700;
+  } /* Segundo color */
+  50% {
+    color: #32cd32;
+  } /* Tercer color */
+  75% {
+    color: #1e90ff;
+  } /* Cuarto color */
+  100% {
+    color: #ff6347;
+  } /* Volver al primer color */
+}
+
+.precio-detalle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 30px;
+  color: rgb(10, 10, 104);
+}
+
+.stock-detalle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1px;
+}
