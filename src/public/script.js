@@ -11,7 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function changeImage() {
     currentIndex = (currentIndex + 1) % images.length;
-    document.getElementById("header-image").src = images[currentIndex];
+    const headerImage = document.getElementById("header-image");
+    if (headerImage) {
+      headerImage.src = images[currentIndex];
+    }
   }
 
   setInterval(changeImage, 10000); // Cambia la imagen cada 10 segundos
@@ -22,7 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateTitle() {
     titleIndex = (titleIndex + 1) % titles.length;
-    titleElement.textContent = titles[titleIndex];
+    if (titleElement) {
+      titleElement.textContent = titles[titleIndex];
+    }
   }
 
   setInterval(updateTitle, 5000); // Cambia el título cada 5 segundos

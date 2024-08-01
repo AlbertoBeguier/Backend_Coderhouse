@@ -1,0 +1,45 @@
+<div class="container">
+  <h1>Productos en tiempo real</h1>
+
+  <form id="product-form">
+    <input
+      type="text"
+      id="product-title"
+      placeholder="Título del producto"
+      required
+    />
+    <textarea
+      id="product-description"
+      placeholder="Descripción del producto"
+      required
+    ></textarea>
+    <input
+      type="text"
+      id="product-code"
+      placeholder="Código del producto"
+      required
+    />
+    <input
+      type="number"
+      id="product-price"
+      placeholder="Precio del producto"
+      required
+    />
+    <input
+      type="number"
+      id="product-stock"
+      placeholder="Stock del producto"
+      required
+    />
+    <input
+      type="text"
+      id="product-thumbnails"
+      placeholder="Thumbnails del producto (opcional)"
+    />
+    <button type="submit">Agregar Producto</button>
+  </form>
+
+  <div id="productos-listado"></div>
+</div>
+
+<script src="/main.js"></script>

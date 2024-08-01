@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { create } from "express-handlebars";
 import { Server } from "socket.io";
 
-// Definir __dirname manualmente
+// Definir __filename y __dirname manualmente
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -78,18 +78,62 @@ app.get("/carritos", (req, res) => {
   res.render("carritos", { title: "Carritos" });
 });
 
+// Ruta para productos en tiempo real
+app.get("/realtimeproducts", (req, res) => {
+  res.render("realTimeProducts", { title: "Productos en tiempo real" });
+});
+
 // Iniciar el servidor - poner a escuchar al servidor en el puerto 8080
-// agrego una referencia al servidor http para poder utilizar socket.io
 const httpServer = app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
 
-// genero una instancia de socket.io pasando el servidor http (del lado del backend)
+// Instancia de socket.io
 const io = new Server(httpServer);
 
-// uso de socket.io en el lado del servidor para recibir mensajes del cliente con el metodo on
+// Manejo de conexiones socket.io
 io.on("connection", socket => {
   console.log("Un cliente se ha conectado");
+
+  // Enviar listado de productos al cliente
+  socket.emit("listado_de_productos", products);
+
+  // Manejar agregar producto
+  socket.on("agregarProducto", product => {
+    const codeExists = products.some(p => p.code === product.code);
+    if (codeExists) {
+      socket.emit("mensajeError", "El código del producto ya existe.");
+      return;
+    }
+
+    const newProduct = {
+      id: products.length ? products[products.length - 1].id + 1 : 1,
+      ...product,
+      price: parseFloat(product.price),
+      stock: parseInt(product.stock, 10),
+      thumbnail: product.thumbnail,
+    };
+    products.push(newProduct);
+    fs.writeFile(productsFilePath, JSON.stringify(products, null, 2), err => {
+      if (err) {
+        console.error("Error al escribir en el archivo JSON", err);
+      }
+      // Enviar la lista actualizada de productos a todos los clientes
+      io.emit("listado_de_productos", products);
+    });
+  });
+
+  // Manejar eliminar producto
+  socket.on("eliminarProducto", id => {
+    products = products.filter(p => p.id !== id);
+    fs.writeFile(productsFilePath, JSON.stringify(products, null, 2), err => {
+      if (err) {
+        console.error("Error al escribir en el archivo JSON", err);
+      }
+      // Enviar la lista actualizada de productos a todos los clientes
+      io.emit("listado_de_productos", products);
+    });
+  });
 
   // uso de socket.io en el lado del servidor para recibir mensajes del cliente con el método on
   socket.on("mensaje", data => {

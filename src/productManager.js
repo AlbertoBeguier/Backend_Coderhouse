@@ -69,7 +69,7 @@ class ProductManager {
       status: true,
       stock,
       category,
-      thumbnails: thumbnails || [],
+      thumbnails: thumbnails,
     };
     products.push(newProduct);
     await this.saveProducts(products);
