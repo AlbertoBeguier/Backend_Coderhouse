@@ -58,7 +58,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/productos", (req, res) => {
-  res.render("productos", { title: "Productos", products });
+  const limit = parseInt(req.query.limit, 10);
+  const limitedProducts =
+    limit && limit > 0 ? products.slice(0, limit) : products;
+  res.render("productos", { title: "Productos", products: limitedProducts });
 });
 
 app.get("/productos/:pid", (req, res) => {
