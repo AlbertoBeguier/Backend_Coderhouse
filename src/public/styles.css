@@ -77,11 +77,10 @@ p {
   margin-left: 80px;
 }
 
-.header-image {
+.header-image-1 {
   width: 120%;
-  max-width: 600px; /* Tamaño máximo para la imagen */
-  height: 590px;
-  margin-bottom: 80px;
+  height: 600px;
+  margin-bottom: 5px;
 }
 
 button {
@@ -253,4 +252,10 @@ button {
 
 .content {
   padding-top: 20px; /* Espacio para la barra de navegación fija */
+}
+
+.span-1-home {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: orangered;
 }

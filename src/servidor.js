@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { create } from "express-handlebars";
+import { Server } from "socket.io";
 
 // Definir __dirname manualmente
 const __filename = fileURLToPath(import.meta.url);
@@ -78,6 +79,22 @@ app.get("/carritos", (req, res) => {
 });
 
 // Iniciar el servidor - poner a escuchar al servidor en el puerto 8080
-app.listen(PORT, () => {
+// agrego una referencia al servidor http para poder utilizar socket.io
+const httpServer = app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
+});
+
+// genero una instancia de socket.io pasando el servidor http (del lado del backend)
+const io = new Server(httpServer);
+
+// uso de socket.io en el lado del servidor para recibir mensajes del cliente con el metodo on
+io.on("connection", socket => {
+  console.log("Un cliente se ha conectado");
+
+  // uso de socket.io en el lado del servidor para recibir mensajes del cliente con el método on
+  socket.on("mensaje", data => {
+    console.log("Mensaje del cliente:", data);
+  });
+  //para enviar un mensaje desde el front al cliente uso el método emit
+  io.emit("mensaje1", "Hola cliente desde el backend");
 });
