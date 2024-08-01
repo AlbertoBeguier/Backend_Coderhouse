@@ -27,7 +27,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos estáticos desde la carpeta "public"
+// Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, "public")));
 
 // Leer el archivo JSON
@@ -52,6 +52,7 @@ const readProductsFromFile = () => {
 // Leer los productos al iniciar el servidor
 readProductsFromFile();
 
+// Rutas (rutas de la API)
 app.get("/", (req, res) => {
   res.render("index", { title: "Inicio" });
 });
@@ -73,7 +74,7 @@ app.get("/carritos", (req, res) => {
   res.render("carritos", { title: "Carritos" });
 });
 
-// Iniciar el servidor
+// Iniciar el servidor - poner a escuchar al servidor en el puerto 8080
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });

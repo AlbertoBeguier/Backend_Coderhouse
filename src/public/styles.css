@@ -1,5 +1,6 @@
 body {
   font-family: Arial, sans-serif;
+  padding-top: 60px; /* Para asegurar que el contenido no esté oculto detrás de la barra de navegación fija */
 }
 
 .titulo-index {
@@ -209,4 +210,47 @@ button {
   font-weight: bold;
   text-align: center;
   margin-top: 1px;
+}
+
+.a-aling {
+  margin-left: 30px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.footer-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.footer p {
+  margin: 5px 0;
+  text-align: center;
+}
+
+.footer a {
+  color: #000;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1030;
+}
+
+.content {
+  padding-top: 20px; /* Espacio para la barra de navegación fija */
 }

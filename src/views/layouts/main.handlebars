@@ -20,17 +20,27 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">
-          <i class="fas fa-home"></i>
-        </a>
-        <p>NAV BAR</p>
+      <nav class="navbar navbar-light bg-light fixed-top">
+        <a class="navbar-brand a-aling" href="/">Tienda Virtual</a>
+        <button onclick="location.href='/productos'">Mostrar todos los productos</button>
       </nav>
     </header>
-    {{{body}}}
-    <footer>
-      <p>FOOTER</p>
-    </footer>
+    <div class="content">
+      {{{body}}}
+    </div>
+    <div class="footer-container">
+      <footer class="footer">
+        <p>&copy; 2024 Tienda Virtual - Todos los derechos reservados.</p>
+        <p>Desarrollado por AB</p>
+        <p>
+          <a href="/privacy-policy">Política de Privacidad</a>
+          |
+          <a href="/terms-of-service">Términos de Servicio</a>
+          |
+          <a href="/contact">Contacto</a>
+        </p>
+      </footer>
+    </div>
     <script src="/script.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
