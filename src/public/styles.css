@@ -259,3 +259,44 @@ button {
   font-weight: 600;
   color: orangered;
 }
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espacio entre los elementos del formulario */
+  margin-top: 20px;
+}
+
+.form-control {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.input-wide {
+  width: 100%; /* Asegura que los inputs anchos tengan el mismo tamaño */
+}
+
+.form-row {
+  display: flex;
+  gap: 15px; /* Espacio entre los inputs de la misma fila */
+}
+
+.input-small {
+  flex: 1;
+}
+
+.text-center {
+  text-align: center;
+}
+
+h1.text-center {
+  margin-bottom: 20px;
+}

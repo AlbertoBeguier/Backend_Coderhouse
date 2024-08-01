@@ -1,42 +1,52 @@
 <div class="container">
-  <h1>Productos en tiempo real</h1>
+  <h1 class="text-center">Agregar (eliminar) Productos en tiempo real</h1>
 
-  <form id="product-form">
+  <form id="product-form" class="product-form">
     <input
       type="text"
       id="product-title"
       placeholder="Título del producto"
       required
+      class="form-control input-wide"
     />
     <textarea
       id="product-description"
       placeholder="Descripción del producto"
       required
+      class="form-control input-wide"
     ></textarea>
-    <input
-      type="text"
-      id="product-code"
-      placeholder="Código del producto"
-      required
-    />
-    <input
-      type="number"
-      id="product-price"
-      placeholder="Precio del producto"
-      required
-    />
-    <input
-      type="number"
-      id="product-stock"
-      placeholder="Stock del producto"
-      required
-    />
+    <div class="form-row">
+      <input
+        type="text"
+        id="product-code"
+        placeholder="Código del producto"
+        required
+        class="form-control input-small"
+      />
+      <input
+        type="number"
+        id="product-price"
+        placeholder="Precio del producto"
+        required
+        class="form-control input-small"
+      />
+      <input
+        type="number"
+        id="product-stock"
+        placeholder="Stock del producto"
+        required
+        class="form-control input-small"
+      />
+    </div>
     <input
       type="text"
       id="product-thumbnails"
       placeholder="Thumbnails del producto (opcional)"
+      class="form-control input-wide"
     />
-    <button type="submit">Agregar Producto</button>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
+    </div>
   </form>
 
   <div id="productos-listado"></div>

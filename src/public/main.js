@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
               <h3>${producto.title}</h3>
               <p>${producto.description}</p>
               <p>Precio: ${producto.price}</p>
-              <img src="${producto.thumbnail}" alt="${producto.title}" />
+              <img src="${producto.thumbnail}" alt="${producto.title}" class="thumbnail"/>
               <p>Código: ${producto.code}</p>
               <p>Stock: ${producto.stock}</p>
-              <button onclick="eliminarProducto(${producto.id})">Eliminar</button>
+              <button onclick="eliminarProducto(${producto.id})" class="btn btn-danger">Eliminar</button>
             </div>
           `
         )
