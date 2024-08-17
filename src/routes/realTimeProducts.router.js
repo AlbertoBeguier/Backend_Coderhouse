@@ -1,14 +1,20 @@
 import { Router } from "express";
-import productManager from "../productManager.js"; // Importa la instancia de ProductManager
+import { Product } from "../models/products.model.js"; // Importa el modelo de Mongoose
 
 const router = Router();
 
 router.get("/realtimeproducts", async (req, res) => {
-  const products = await productManager.getProducts();
-  res.render("realTimeProducts", {
-    title: "Productos en tiempo real",
-    products,
-  });
+  try {
+    const products = await Product.find(); // Obtiene los productos desde MongoDB
+    res.render("realTimeProducts", {
+      title: "Productos en tiempo real",
+      products,
+    });
+  } catch (error) {
+    console.error("Error al obtener productos en tiempo real:", error);
+    res.status(500).send("Error al obtener productos en tiempo real");
+  }
 });
 
 export default router;
+

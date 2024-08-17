@@ -1,42 +1,17 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { Product } from './models/product.model.js'; // Importa el modelo de Mongoose
 
 class ProductManager {
-  constructor(filePath) {
-    this.path = filePath;
+  constructor() {
     this.products = [];
-    this.id = 1;
-  }
-
-  async loadProducts() {
-    try {
-      await fs.promises.access(this.path);
-      const data = await fs.promises.readFile(this.path, "utf-8");
-      return JSON.parse(data);
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        console.log(
-          "El archivo no existe, se creará uno nuevo al guardar productos."
-        );
-        return [];
-      } else {
-        console.error("Error al cargar productos:", error);
-        return [];
-      }
-    }
-  }
-
-  async saveProducts(products) {
-    try {
-      await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
-    } catch (error) {
-      console.error("Error al guardar productos:", error);
-    }
   }
 
   async getProducts() {
-    return await this.loadProducts();
+    try {
+      return await Product.find(); // Obtiene todos los productos de la base de datos
+    } catch (error) {
+      console.error("Error al obtener productos:", error);
+      throw error;
+    }
   }
 
   async addProduct({
@@ -48,74 +23,51 @@ class ProductManager {
     category,
     thumbnails,
   }) {
-    if (!title || !description || !code || !price || !stock || !category) {
-      throw new Error(
-        "Todos los campos son obligatorios, a excepción de thumbnails"
-      );
+    try {
+      const newProduct = new Product({
+        title,
+        description,
+        code,
+        price,
+        stock,
+        category,
+        thumbnails,
+      });
+      await newProduct.save(); // Guarda el nuevo producto en la base de datos
+      return newProduct;
+    } catch (error) {
+      console.error("Error al agregar producto:", error);
+      throw error;
     }
-
-    const products = await this.loadProducts();
-    const codeExists = products.some(product => product.code === code);
-    if (codeExists) {
-      throw new Error("El código del producto ya existe");
-    }
-
-    const newProduct = {
-      id: products.length ? Math.max(...products.map(p => p.id)) + 1 : 1,
-      title,
-      description,
-      code,
-      price,
-      status: true,
-      stock,
-      category,
-      thumbnails: thumbnails,
-    };
-    products.push(newProduct);
-    await this.saveProducts(products);
-    return newProduct;
   }
 
   async getProductById(id) {
-    const products = await this.loadProducts();
-    const product = products.find(product => product.id === id);
-    if (!product) {
-      throw new Error("Producto no encontrado");
+    try {
+      return await Product.findById(id); // Obtiene un producto por su ID en la base de datos
+    } catch (error) {
+      console.error("Error al obtener producto:", error);
+      throw error;
     }
-    return product;
   }
 
   async removeProduct(id) {
-    let products = await this.loadProducts();
-    const index = products.findIndex(product => product.id === id);
-    if (index === -1) {
-      throw new Error("Producto no encontrado");
+    try {
+      await Product.findByIdAndDelete(id); // Elimina un producto por su ID
+    } catch (error) {
+      console.error("Error al eliminar producto:", error);
+      throw error;
     }
-    products.splice(index, 1);
-    await this.saveProducts(products);
   }
 
   async updateProduct(id, updatedFields) {
-    const products = await this.loadProducts();
-    const index = products.findIndex(product => product.id === id);
-    if (index === -1) {
-      throw new Error("Producto no encontrado");
+    try {
+      return await Product.findByIdAndUpdate(id, updatedFields, { new: true }); // Actualiza un producto
+    } catch (error) {
+      console.error("Error al actualizar producto:", error);
+      throw error;
     }
-
-    const product = products[index];
-    products[index] = { ...product, ...updatedFields, id: product.id };
-    await this.saveProducts(products);
-    return products[index];
   }
 }
 
-// Obtener el directorio actual en un módulo ES
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export default new ProductManager();
 
-// Crear una instancia de ProductManager con la ruta al archivo de productos
-const productManager = new ProductManager(
-  path.join(__dirname, "./data/products.json")
-);
-
-export default productManager;
