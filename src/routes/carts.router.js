@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { Cart } from "../models/carts.model.js"; // Importar el modelo de carrito
-import { Product } from "../models/products.model.js"; // Importar el modelo de productos
+import { Cart } from "../models/carts.model.js"; 
+import { Product } from "../models/products.model.js"; 
 
 const router = Router();
 
@@ -17,15 +17,17 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Ruta para obtener todos los carritos con limitación
+// Ruta para obtener y mostrar todos los carritos con limitación
 router.get("/", async (req, res) => {
   const limit = parseInt(req.query.limit, 10);
   try {
     const carts = await Cart.find().populate('products.product');
-    if (limit && limit > 0) {
-      return res.status(200).send(carts.slice(0, limit));
-    }
-    res.status(200).send(carts);
+    const carritos = limit && limit > 0 ? carts.slice(0, limit) : carts;
+
+    res.render("carritos", { 
+      title: "Carritos", 
+      carritos // Envía los carritos a la vista
+    });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -34,7 +36,7 @@ router.get("/", async (req, res) => {
 // Ruta para obtener los productos de un carrito por su ID
 router.get("/:cid", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ id: parseInt(req.params.cid) });
+    const cart = await Cart.findOne({ id: parseInt(req.params.cid) }).populate('products.product');
     if (!cart) {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
@@ -47,12 +49,12 @@ router.get("/:cid", async (req, res) => {
 // Ruta para agregar un producto a un carrito
 router.post("/:cid/product/:pid", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ id: parseInt(req.params.cid) });
+    const cart = await Cart.findOne({ id: parseInt(req.params.cid) }).populate('products.product');
     if (!cart) {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
 
-    const product = await Product.findOne({ id: parseInt(req.params.pid) }); // Cambia aquí
+    const product = await Product.findOne({ id: parseInt(req.params.pid) });
     if (!product) {
       return res.status(404).send({ error: "Producto no encontrado" });
     }

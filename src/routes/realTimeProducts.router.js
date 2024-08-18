@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { Product } from "../models/products.model.js"; // Importa el modelo de Mongoose
+import { Product } from "../models/products.model.js";
 
 const router = Router();
 
-router.get("/realtimeproducts", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const products = await Product.find(); // Obtiene los productos desde MongoDB
     res.render("realTimeProducts", {

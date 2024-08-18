@@ -5,3 +5,17 @@
     {{> card}}
   {{/each}}
 </div>
+
+<!-- Controles de Paginación -->
+<div class="pagination">
+  {{#if hasPrevPage}}
+    <a href="?page={{prevPage}}&limit=3" class="prev">Anterior</a>
+  {{/if}}
+
+  <span>Página {{currentPage}} de {{totalPages}}</span>
+
+  {{#if hasNextPage}}
+    <a href="?page={{nextPage}}&limit=3" class="next">Siguiente</a>
+  {{/if}}
+</div>
+

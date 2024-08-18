@@ -1,14 +1,30 @@
-import { Router } from "express"; 
-import { Product } from "../models/products.model.js"; // Importa el modelo de productos
+import { Router } from "express";
+import { Product } from "../models/products.model.js"; 
 
-const router = Router(); 
+const router = Router();
 
-// Ruta para obtener todos los productos
+// Ruta para obtener todos los productos con paginación
 router.get("/", async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit); 
-    const products = await Product.find().limit(limit > 0 ? limit : undefined); 
-    res.status(200).send(products); 
+    const { page = 1, limit = 3 } = req.query;
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      lean: true
+    };
+
+    const result = await Product.paginate({}, options);
+
+    res.render("productos", { 
+      title: "Productos", 
+      products: result.docs,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      currentPage: result.page,
+      totalPages: result.totalPages
+    });
   } catch (error) {
     res.status(500).send({ error: "Error al obtener productos" });
   }
@@ -19,7 +35,7 @@ router.get("/:pid", async (req, res) => {
   try {
     const product = await Product.findById(req.params.pid);
     if (product) {
-      res.status(200).send(product);
+      res.render("product", { title: product.title, product });
     } else {
       res.status(404).send({ error: "Producto no encontrado" });
     }
@@ -28,18 +44,11 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-// Ruta para crear un nuevo producto
+// Rutas adicionales para crear, actualizar y eliminar productos (pueden permanecer como JSON si no necesitan vistas específicas)
 router.post("/", async (req, res) => {
   try {
     const { title, description, code, price, stock, thumbnails } = req.body;
-    const newProduct = new Product({
-      title,
-      description,
-      code,
-      price,
-      stock,
-      thumbnails,
-    });
+    const newProduct = new Product({ title, description, code, price, stock, thumbnails });
     await newProduct.save();
     res.status(201).send(newProduct);
   } catch (error) {
@@ -47,7 +56,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Ruta para eliminar un producto por su ID
 router.delete("/:pid", async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.pid);
@@ -61,7 +69,6 @@ router.delete("/:pid", async (req, res) => {
   }
 });
 
-// Ruta para actualizar un producto por su ID
 router.put("/:pid", async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(req.params.pid, req.body, { new: true });
@@ -76,5 +83,6 @@ router.put("/:pid", async (req, res) => {
 });
 
 export default router;
+
 
 
