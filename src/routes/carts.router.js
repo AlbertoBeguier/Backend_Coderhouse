@@ -1,50 +1,77 @@
-import { Router } from "express"; // Importa el módulo Router de Express
-import cartManager from "../cartManager.js"; // Importa el módulo cartManager para manejar carritos
+import { Router } from "express";
+import { Cart } from "../models/carts.model.js"; // Importar el modelo de carrito
+import { Product } from "../models/products.model.js"; // Importar el modelo de productos
 
-const router = Router(); // Crea una nueva instancia del enrutador
+const router = Router();
 
 // Ruta para crear un nuevo carrito
 router.post("/", async (req, res) => {
   try {
-    const newCart = await cartManager.createCart(); // Crea un nuevo carrito
-    res.status(201).send(newCart); // Devuelve el carrito creado con un código de estado 201
+    const lastCart = await Cart.findOne().sort({ id: -1 });
+    const newId = lastCart ? lastCart.id + 1 : 1;
+    const newCart = new Cart({ id: newId, products: [] });
+    await newCart.save();
+    res.status(201).send(newCart);
   } catch (error) {
-    res.status(500).send({ error: error.message }); // Si ocurre un error, devuelve un mensaje de error
+    res.status(500).send({ error: error.message });
   }
 });
 
 // Ruta para obtener todos los carritos con limitación
 router.get("/", async (req, res) => {
-  const limit = parseInt(req.query.limit); // Obtiene el parámetro 'limit' de la query string y lo convierte a un número entero
-  const carts = await cartManager.getCarts(); // Obtiene todos los carritos del cartManager
-  if (limit && limit > 0) {
-    // Verifica si el parámetro 'limit' es válido y mayor que 0
-    return res.status(200).send(carts.slice(0, limit)); // Si 'limit' es válido, devuelve solo la cantidad de carritos especificados
+  const limit = parseInt(req.query.limit, 10);
+  try {
+    const carts = await Cart.find().populate('products.product');
+    if (limit && limit > 0) {
+      return res.status(200).send(carts.slice(0, limit));
+    }
+    res.status(200).send(carts);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
-  res.status(200).send(carts); // Si 'limit' no es válido, devuelve todos los carritos
 });
 
 // Ruta para obtener los productos de un carrito por su ID
 router.get("/:cid", async (req, res) => {
   try {
-    const cart = await cartManager.getCartById(parseInt(req.params.cid)); // Obtiene el carrito por su ID
-    res.status(200).send(cart.products); // Devuelve los productos del carrito encontrado
+    const cart = await Cart.findOne({ id: parseInt(req.params.cid) }).populate('products.product');
+    if (!cart) {
+      return res.status(404).send({ error: "Carrito no encontrado" });
+    }
+    res.status(200).send(cart.products);
   } catch (error) {
-    res.status(404).send({ error: error.message }); // Si ocurre un error, devuelve un mensaje de error
+    res.status(500).send({ error: error.message });
   }
 });
 
 // Ruta para agregar un producto a un carrito
 router.post("/:cid/product/:pid", async (req, res) => {
   try {
-    const cart = await cartManager.addProductToCart(
-      parseInt(req.params.cid),
-      parseInt(req.params.pid)
-    ); // Agrega un producto al carrito especificado
-    res.status(200).send(cart); // Devuelve el carrito actualizado
+    const cart = await Cart.findOne({ id: parseInt(req.params.cid) });
+    if (!cart) {
+      return res.status(404).send({ error: "Carrito no encontrado" });
+    }
+
+    const product = await Product.findOne({ id: parseInt(req.params.pid) }); // Cambia aquí
+    if (!product) {
+      return res.status(404).send({ error: "Producto no encontrado" });
+    }
+
+    const productIndex = cart.products.findIndex(p => p.product.toString() === product._id.toString());
+    if (productIndex !== -1) {
+      cart.products[productIndex].quantity += 1;
+    } else {
+      cart.products.push({ product: product._id, quantity: 1 });
+    }
+
+    await cart.save();
+    res.status(200).send(cart);
   } catch (error) {
-    res.status(404).send({ error: error.message }); // Si ocurre un error, devuelve un mensaje de error
+    res.status(500).send({ error: error.message });
   }
 });
 
-export default router; // Exporta el enrutador para ser utilizado en otros archivos
+export default router;
+
+
+

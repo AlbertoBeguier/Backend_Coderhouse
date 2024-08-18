@@ -1,9 +1,5 @@
-import mongoose from 'mongoose'; // Importo el módulo de mongoose
+import mongoose from 'mongoose';
 
-const productCollection = 'products'; // Nombre de la colección
-
-// Defino el esquema de la colección (es decir, la estructura de los documentos 
-// que se guardarán en la colección)
 const productSchema = new mongoose.Schema({
   id: {
     type: Number,
@@ -36,12 +32,11 @@ const productSchema = new mongoose.Schema({
     required: true
   }
 }, {
-  timestamps: true // Añade createdAt y updatedAt automáticamente
+  timestamps: true
 });
 
-// Creo el modelo de la colección (es decir, la representación en código de la colección)
-// y lo exporto para poder utilizarlo en otros archivos
-export const Product = mongoose.model(productCollection, productSchema);
+export const Product = mongoose.model('Product', productSchema);
+
 
 
 

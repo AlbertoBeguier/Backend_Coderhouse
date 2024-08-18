@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import { fileURLToPath } from "url";
 import { create } from "express-handlebars";
 import { Server } from "socket.io";
+import cartRouter from "./routes/carts.router.js"; // Importa el router de carritos
+import { Cart } from "./models/carts.model.js"; // Importa el modelo de carrito
 import { Product } from "./models/products.model.js"; // Importa el modelo de productos
 
 // Definir __filename y __dirname manualmente
@@ -59,6 +61,7 @@ app.get("/productos", async (req, res) => {
     res.status(500).send("Error al obtener productos");
   }
 });
+
 app.get("/productos/:pid", async (req, res) => {
   try {
     // En lugar de buscar por _id de MongoDB, busca por el campo `id` numérico
@@ -73,15 +76,23 @@ app.get("/productos/:pid", async (req, res) => {
     res.status(500).send("Error al obtener producto");
   }
 });
-
-app.get("/carritos", (req, res) => {
-  res.render("carritos", { title: "Carritos" });
+app.get("/carritos", async (req, res) => {
+  try {
+    const carritos = await Cart.find().populate('products.product');
+    res.render("carritos", { title: "Carritos", carritos });
+  } catch (err) {
+    console.error("Error al obtener carritos:", err);
+    res.status(500).json({ error: "Error al obtener carritos" });
+  }
 });
 
 // Ruta para productos en tiempo real
 app.get("/realtimeproducts", (req, res) => {
   res.render("realTimeProducts", { title: "Productos en tiempo real" });
 });
+
+// Usar el router de carritos
+app.use("/api/carritos", cartRouter);
 
 // Iniciar el servidor - poner a escuchar al servidor en el puerto 8080
 const httpServer = app.listen(PORT, () => {
@@ -92,7 +103,7 @@ const httpServer = app.listen(PORT, () => {
 const io = new Server(httpServer);
 
 // Manejo de conexiones socket.io
-io.on("connection", async socket => {
+io.on("connection", async (socket) => {
   console.log("Un cliente se ha conectado");
 
   // Enviar listado de productos al cliente
@@ -101,29 +112,29 @@ io.on("connection", async socket => {
   socket.emit("listado_de_productos", products);
 
   // Manejar agregar producto
-  socket.on("agregarProducto", async product => {
+  socket.on("agregarProducto", async (product) => {
     try {
-        // Obtener el valor máximo actual de `id` en la base de datos
-        const lastProduct = await Product.findOne().sort({ id: -1 });
-        const newId = lastProduct ? lastProduct.id + 1 : 1;
+      // Obtener el valor máximo actual de `id` en la base de datos
+      const lastProduct = await Product.findOne().sort({ id: -1 });
+      const newId = lastProduct ? lastProduct.id + 1 : 1;
 
-        const newProduct = new Product({
-            id: newId, // Asignar el nuevo `id`
-            ...product
-        });
-        
-        console.log("Producto recibido en el servidor:", newProduct); // Log para verificar el producto antes de guardar
-        await newProduct.save();
+      const newProduct = new Product({
+        id: newId, // Asignar el nuevo `id`
+        ...product,
+      });
 
-        const updatedProducts = await Product.find();
-        io.emit("listado_de_productos", updatedProducts);
+      console.log("Producto recibido en el servidor:", newProduct); // Log para verificar el producto antes de guardar
+      await newProduct.save();
+
+      const updatedProducts = await Product.find();
+      io.emit("listado_de_productos", updatedProducts);
     } catch (err) {
-        console.error("Error al agregar producto:", err);
+      console.error("Error al agregar producto:", err);
     }
-});
+  });
 
   // Manejar eliminar producto
-  socket.on("eliminarProducto", async id => {
+  socket.on("eliminarProducto", async (id) => {
     try {
       const productId = new mongoose.Types.ObjectId(id); // Usa 'new' aquí
       await Product.findByIdAndDelete(productId);
@@ -135,7 +146,7 @@ io.on("connection", async socket => {
   });
 
   // Recibir mensajes del cliente
-  socket.on("mensaje", data => {
+  socket.on("mensaje", (data) => {
     console.log("Mensaje del cliente:", data);
   });
 
@@ -143,4 +154,6 @@ io.on("connection", async socket => {
   io.emit("mensaje1", "Hola cliente desde el backend");
 });
 
-
+hbs.handlebars.registerHelper('multiply', function (a, b) {
+  return a * b;
+});
