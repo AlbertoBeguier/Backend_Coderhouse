@@ -55,7 +55,6 @@ io.on("connection", async (socket) => {
   console.log("Un cliente se ha conectado");
 
   const products = await Product.find();
-  console.log(`Productos enviados al cliente: ${products.length}`);
   socket.emit("listado_de_productos", products);
 
   socket.on("agregarProducto", async (product) => {

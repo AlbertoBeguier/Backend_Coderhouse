@@ -62,6 +62,21 @@ class CartManager {
       throw error;
     }
   }
+
+  // Método para eliminar un producto de un carrito
+  async removeProductFromCart(cartId, productId) {
+    try {
+      const cart = await this.getCartById(cartId);
+      // Filtra los productos que no coinciden con el productId a eliminar
+      cart.products = cart.products.filter(p => !p.product.equals(productId));
+      await cart.save();
+      return cart;
+    } catch (error) {
+      console.error("Error al eliminar producto del carrito:", error);
+      throw error;
+    }
+  }
 }
 
 export default new CartManager();
+
