@@ -6,16 +6,14 @@
   {{/each}}
 </div>
 
-<!-- Controles de Paginación -->
-<div class="pagination">
+<div class="pagination justify-content-center mt-4">
   {{#if hasPrevPage}}
-    <a href="?page={{prevPage}}&limit=3" class="prev">Anterior</a>
+    <a href="?page={{prevPage}}&limit=3" class="btn btn-primary mx-2">Anterior</a>
   {{/if}}
-
-  <span>Página {{currentPage}} de {{totalPages}}</span>
-
+<hr>
+  <span class="paginacion">Página {{currentPage}} de {{totalPages}}</span>
   {{#if hasNextPage}}
-    <a href="?page={{nextPage}}&limit=3" class="next">Siguiente</a>
+    <a href="?page={{nextPage}}&limit=3" class="btn btn-primary mx-2">Siguiente</a>
   {{/if}}
+  <hr>
 </div>
-

@@ -300,3 +300,11 @@ button {
 h1.text-center {
   margin-bottom: 20px;
 }
+
+.paginacion {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  text-align: center;
+  font-weight: 700;
+  margin-top: 10px;
+}	
