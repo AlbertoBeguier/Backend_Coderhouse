@@ -7,7 +7,7 @@ import { Server } from "socket.io";
 import cartRouter from "./routes/carts.router.js"; 
 import productRouter from "./routes/products.router.js"; 
 import realtimeProductRouter from "./routes/realTimeProducts.router.js";
-import { Product } from "./models/products.model.js"; 
+import { Product } from "./models/products.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,7 +41,13 @@ app.get("/", (req, res) => {
   res.render("index", { title: "Inicio" });
 });
 
+// Rutas para las vistas
+app.use("/", productRouter);
 app.use("/productos", productRouter);
+
+// Rutas para la API JSON
+app.use("/api", productRouter);
+
 app.use("/realtimeproducts", realtimeProductRouter);
 app.use("/carritos", cartRouter);
 
