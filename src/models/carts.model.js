@@ -21,7 +21,13 @@ const cartSchema = new mongoose.Schema({
     }
   ]
 }, {
-  timestamps: true // Añade createdAt y updatedAt automáticamente
+  timestamps: true 
+});
+
+// Middleware pre para populate automático
+cartSchema.pre("findOne", function(next) {
+  this.populate('products.product');
+  next();
 });
 
 export const Cart = mongoose.model('Cart', cartSchema);

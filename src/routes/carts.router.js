@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
 // Ruta para obtener los productos de un carrito por su ID
 router.get("/:cid", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ id: parseInt(req.params.cid) }).populate('products.product');
+    const cart = await Cart.findOne({ id: parseInt(req.params.cid) });
     if (!cart) {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
