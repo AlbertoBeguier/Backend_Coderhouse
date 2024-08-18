@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { create } from "express-handlebars";
 import { Server } from "socket.io";
 import cartRouter from "./routes/carts.router.js"; // Importa el router de carritos
+import productRouter from "./routes/products.router.js"; // Importa el router de productos
 import { Cart } from "./models/carts.model.js"; // Importa el modelo de carrito
 import { Product } from "./models/products.model.js"; // Importa el modelo de productos
 
@@ -17,9 +18,7 @@ const app = express();
 const PORT = 8080;
 
 // Conectar a MongoDB usando Mongoose
-mongoose.connect("mongodb+srv://aabeguier:5279167134@clustercoder.kzn29.mongodb.net/ProyectoCoder?retryWrites=true&w=majority&appName=ClusterCoder", {
- 
-})
+mongoose.connect("mongodb+srv://aabeguier:5279167134@clustercoder.kzn29.mongodb.net/ProyectoCoder?retryWrites=true&w=majority&appName=ClusterCoder", {})
   .then(() => console.log("Conectado a MongoDB"))
   .catch(err => console.error("Error al conectar a MongoDB:", err));
 
@@ -63,7 +62,6 @@ app.get("/productos", async (req, res) => {
 
 app.get("/productos/:pid", async (req, res) => {
   try {
-    // En lugar de buscar por _id de MongoDB, busca por el campo `id` numérico
     const product = await Product.findOne({ id: parseInt(req.params.pid) });
     if (product) {
       res.render("product", { title: product.title, product });
@@ -75,6 +73,7 @@ app.get("/productos/:pid", async (req, res) => {
     res.status(500).send("Error al obtener producto");
   }
 });
+
 app.get("/carritos", async (req, res) => {
   try {
     const carritos = await Cart.find().populate('products.product');
@@ -90,8 +89,9 @@ app.get("/realtimeproducts", (req, res) => {
   res.render("realTimeProducts", { title: "Productos en tiempo real" });
 });
 
-// Usar el router de carritos
+// Usar los routers de carritos y productos
 app.use("/api/carritos", cartRouter);
+app.use("/api/productos", productRouter);
 
 // Iniciar el servidor - poner a escuchar al servidor en el puerto 8080
 const httpServer = app.listen(PORT, () => {
@@ -105,24 +105,21 @@ const io = new Server(httpServer);
 io.on("connection", async (socket) => {
   console.log("Un cliente se ha conectado");
 
-  // Enviar listado de productos al cliente
   const products = await Product.find();
   console.log(`Productos enviados al cliente: ${products.length}`);
   socket.emit("listado_de_productos", products);
 
-  // Manejar agregar producto
   socket.on("agregarProducto", async (product) => {
     try {
-      // Obtener el valor máximo actual de `id` en la base de datos
       const lastProduct = await Product.findOne().sort({ id: -1 });
       const newId = lastProduct ? lastProduct.id + 1 : 1;
 
       const newProduct = new Product({
-        id: newId, // Asignar el nuevo `id`
+        id: newId,
         ...product,
       });
 
-      console.log("Producto recibido en el servidor:", newProduct); // Log para verificar el producto antes de guardar
+      console.log("Producto recibido en el servidor:", newProduct);
       await newProduct.save();
 
       const updatedProducts = await Product.find();
@@ -132,10 +129,9 @@ io.on("connection", async (socket) => {
     }
   });
 
-  // Manejar eliminar producto
   socket.on("eliminarProducto", async (id) => {
     try {
-      const productId = new mongoose.Types.ObjectId(id); // Usa 'new' aquí
+      const productId = new mongoose.Types.ObjectId(id);
       await Product.findByIdAndDelete(productId);
       const updatedProducts = await Product.find();
       io.emit("listado_de_productos", updatedProducts);
@@ -144,15 +140,14 @@ io.on("connection", async (socket) => {
     }
   });
 
-  // Recibir mensajes del cliente
   socket.on("mensaje", (data) => {
     console.log("Mensaje del cliente:", data);
   });
 
-  // Enviar mensaje al cliente
   io.emit("mensaje1", "Hola cliente desde el backend");
 });
 
 hbs.handlebars.registerHelper('multiply', function (a, b) {
   return a * b;
 });
+
