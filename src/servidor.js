@@ -19,15 +19,27 @@ mongoose.connect("mongodb+srv://aabeguier:5279167134@clustercoder.kzn29.mongodb.
   .then(() => console.log("Conectado a MongoDB"))
   .catch(err => console.error("Error al conectar a MongoDB:", err));
 
-const hbs = create({
-  defaultLayout: "main",
-  layoutsDir: path.join(__dirname, "views", "layouts"),
-  partialsDir: path.join(__dirname, "views", "partials"),
-  runtimeOptions: {
-    allowProtoPropertiesByDefault: true,
-    allowProtoMethodsByDefault: true,
-  },
-});
+  const hbs = create({
+    defaultLayout: "main",
+    layoutsDir: path.join(__dirname, "views", "layouts"),
+    partialsDir: path.join(__dirname, "views", "partials"),
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true,
+    },
+    helpers: {
+      multiply: function (a, b) {
+        return a * b;
+      },
+      calculateTotal: function (products) {
+        let total = 0;
+        products.forEach(function (item) {
+          total += item.product.price * item.quantity;
+        });
+        return total;
+      }
+    }
+  });
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");

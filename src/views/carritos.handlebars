@@ -15,9 +15,14 @@
                 data-product-id="{{product._id}}">
                 Eliminar
               </button>
+              <br>Subtotal: ${{multiply product.price quantity}}
+              
             </li>
           {{/each}}
         </ul>
+        
+        <!-- Total General del Carrito -->
+        <h3>Total del Carrito: ${{calculateTotal products}}</h3>
       </div>
       <hr>
     {{/each}}

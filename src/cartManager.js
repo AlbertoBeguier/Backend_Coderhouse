@@ -1,10 +1,6 @@
 import { Cart } from './models/cart.model.js'; // Importa el modelo de carritos
 
 class CartManager {
-  constructor() {
-    this.carts = [];
-  }
-
   // Método para obtener todos los carritos
   async getCarts() {
     try {
@@ -15,14 +11,15 @@ class CartManager {
     }
   }
 
-  // Método para crear un nuevo carrito
+  // Método para crear un nuevo carrito (solo si no existe ninguno)
   async createCart() {
     try {
-      const lastCart = await Cart.findOne().sort({ id: -1 });
-      const newId = lastCart ? lastCart.id + 1 : 1;
-      const newCart = new Cart({ id: newId, products: [] });
-      await newCart.save();
-      return newCart;
+      let cart = await Cart.findOne();
+      if (!cart) {
+        cart = new Cart({ products: [] });
+        await cart.save();
+      }
+      return cart;
     } catch (error) {
       console.error("Error al crear carrito:", error);
       throw error;
@@ -30,9 +27,9 @@ class CartManager {
   }
 
   // Método para obtener un carrito por su ID
-  async getCartById(id) {
+  async getCartById(cartId) {
     try {
-      const cart = await Cart.findOne({ id }).populate('products.product');
+      const cart = await Cart.findOne({ id: cartId }).populate('products.product');
       if (!cart) {
         throw new Error("Carrito no encontrado");
       }
@@ -44,17 +41,18 @@ class CartManager {
   }
 
   // Método para agregar un producto a un carrito
-  async addProductToCart(cartId, productId) {
+  async addProductToCart(cartId, productId, quantity = 1) {
     try {
       const cart = await this.getCartById(cartId);
-      const productIndex = cart.products.findIndex(p => p.product.equals(productId));
+      const productExist = cart.products.find(p => p.product.toString() === productId);
 
-      if (productIndex !== -1) {
-        cart.products[productIndex].quantity += 1;
+      if (productExist) {
+        productExist.quantity += quantity;
       } else {
-        cart.products.push({ product: productId, quantity: 1 });
+        cart.products.push({ product: productId, quantity });
       }
 
+      cart.markModified('products');
       await cart.save();
       return cart;
     } catch (error) {
@@ -67,7 +65,6 @@ class CartManager {
   async removeProductFromCart(cartId, productId) {
     try {
       const cart = await this.getCartById(cartId);
-      // Filtra los productos que no coinciden con el productId a eliminar
       cart.products = cart.products.filter(p => !p.product.equals(productId));
       await cart.save();
       return cart;
@@ -76,7 +73,57 @@ class CartManager {
       throw error;
     }
   }
+
+  // Método para actualizar el carrito con un arreglo de productos
+  async updateCartProducts(cartId, products) {
+    try {
+      const cart = await this.getCartById(cartId);
+      cart.products = products;
+      cart.markModified('products');
+      await cart.save();
+      return cart;
+    } catch (error) {
+      console.error("Error al actualizar el carrito:", error);
+      throw error;
+    }
+  }
+
+  // Método para actualizar la cantidad de un producto específico en el carrito
+  async updateProductQuantity(cartId, productId, quantity) {
+    try {
+      const cart = await this.getCartById(cartId);
+      const productIndex = cart.products.findIndex(p => p.product.equals(productId));
+
+      if (productIndex !== -1) {
+        cart.products[productIndex].quantity = quantity;
+      } else {
+        throw new Error("Producto no encontrado en el carrito");
+      }
+
+      cart.markModified('products');
+      await cart.save();
+      return cart;
+    } catch (error) {
+      console.error("Error al actualizar la cantidad de producto en el carrito:", error);
+      throw error;
+    }
+  }
+
+  // Método para eliminar todos los productos de un carrito
+  async removeAllProductsFromCart(cartId) {
+    try {
+      const cart = await this.getCartById(cartId);
+      cart.products = [];
+      cart.markModified('products');
+      await cart.save();
+      return cart;
+    } catch (error) {
+      console.error("Error al eliminar todos los productos del carrito:", error);
+      throw error;
+    }
+  }
 }
 
 export default new CartManager();
+
 

@@ -4,14 +4,18 @@ import { Product } from "../models/products.model.js";
 
 const router = Router();
 
-// Crear un nuevo carrito
+// Crear un nuevo carrito (solo si no existe)
 router.post("/", async (req, res) => {
   try {
-    const lastCart = await Cart.findOne().sort({ id: -1 });
-    const newId = lastCart ? lastCart.id + 1 : 1;
-    const newCart = new Cart({ id: newId, products: [] });
-    await newCart.save();
-    res.status(201).send(newCart);
+    let cart = await Cart.findOne({ id: 1 }); // Busca el carrito con id 1
+
+    if (!cart) {
+      // Si no existe ningún carrito, crea uno nuevo con id 1
+      cart = new Cart({ id: 1, products: [] });
+      await cart.save();
+    }
+
+    res.status(201).send(cart);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -46,10 +50,11 @@ router.get("/:cid", async (req, res) => {
   }
 });
 
-// Agregar un producto a un carrito
+// Agregar un producto al carrito existente
 router.post("/:cid/product/:pid", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ id: parseInt(req.params.cid) }).populate('products.product');
+    let cart = await Cart.findOne({ id: parseInt(req.params.cid) });
+
     if (!cart) {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
@@ -151,4 +156,3 @@ router.delete("/:cid", async (req, res) => {
 });
 
 export default router;
-
