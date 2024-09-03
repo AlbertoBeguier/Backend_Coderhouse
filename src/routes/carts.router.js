@@ -90,9 +90,17 @@ router.delete("/:cid/products/:pid", async (req, res) => {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
 
+    const initialProductCount = cart.products.length;
+
     cart.products = cart.products.filter(
       (p) => !p.product.equals(req.params.pid)
     );
+
+    if (initialProductCount === cart.products.length) {
+      return res
+        .status(404)
+        .send({ error: "Producto no encontrado en el carrito" });
+    }
 
     await cart.save();
 
