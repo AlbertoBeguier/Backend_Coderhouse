@@ -4,16 +4,16 @@ import { Product } from "../models/products.model.js";
 
 const router = express.Router();
 
-// Crear un nuevo carrito (solo si no existe)
+// Crear un nuevo carrito (sin verificar si ya existe)
 router.post("/", async (req, res) => {
   try {
-    let cart = await Cart.findOne({ id: 1 }); // Busca el carrito con id 1
+    // Encuentra el último carrito para determinar el siguiente ID
+    const lastCart = await Cart.findOne().sort({ id: -1 });
+    const newId = lastCart ? lastCart.id + 1 : 1;
 
-    if (!cart) {
-      // Si no existe ningún carrito, crea uno nuevo con id 1
-      cart = new Cart({ id: 1, products: [] });
-      await cart.save();
-    }
+    // Crea un nuevo carrito con un nuevo ID
+    const cart = new Cart({ id: newId, products: [] });
+    await cart.save();
 
     res.status(201).send(cart);
   } catch (error) {
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Obtener todos los carritos con limitación y renderizado en vista
+// Obtener todos los carritos con limitación
 router.get("/", async (req, res) => {
   const limit = parseInt(req.query.limit, 10);
   try {

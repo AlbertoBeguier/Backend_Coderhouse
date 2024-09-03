@@ -4,8 +4,8 @@ import mongoose from "mongoose";
 import { fileURLToPath } from "url";
 import { create } from "express-handlebars";
 import { Server } from "socket.io";
-import cartRouter from "./routes/carts.router.js"; 
-import productRouter from "./routes/products.router.js"; 
+import cartRouter from "./routes/carts.router.js";
+import productRouter from "./routes/products.router.js";
 import realtimeProductRouter from "./routes/realTimeProducts.router.js";
 import { Product } from "./models/products.model.js";
 
@@ -15,31 +15,35 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 8080;
 
-mongoose.connect("mongodb+srv://aabeguier:5279167134@clustercoder.kzn29.mongodb.net/ProyectoCoder?retryWrites=true&w=majority&appName=ClusterCoder", {})
+mongoose
+  .connect(
+    "mongodb+srv://aabeguier:5279167134@clustercoder.kzn29.mongodb.net/ProyectoCoder?retryWrites=true&w=majority&appName=ClusterCoder",
+    {}
+  )
   .then(() => console.log("Conectado a MongoDB"))
-  .catch(err => console.error("Error al conectar a MongoDB:", err));
+  .catch((err) => console.error("Error al conectar a MongoDB:", err));
 
-  const hbs = create({
-    defaultLayout: "main",
-    layoutsDir: path.join(__dirname, "views", "layouts"),
-    partialsDir: path.join(__dirname, "views", "partials"),
-    runtimeOptions: {
-      allowProtoPropertiesByDefault: true,
-      allowProtoMethodsByDefault: true,
+const hbs = create({
+  defaultLayout: "main",
+  layoutsDir: path.join(__dirname, "views", "layouts"),
+  partialsDir: path.join(__dirname, "views", "partials"),
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  },
+  helpers: {
+    multiply: function (a, b) {
+      return a * b;
     },
-    helpers: {
-      multiply: function (a, b) {
-        return a * b;
-      },
-      calculateTotal: function (products) {
-        let total = 0;
-        products.forEach(function (item) {
-          total += item.product.price * item.quantity;
-        });
-        return total;
-      }
-    }
-  });
+    calculateTotal: function (products) {
+      let total = 0;
+      products.forEach(function (item) {
+        total += item.product.price * item.quantity;
+      });
+      return total;
+    },
+  },
+});
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
@@ -59,6 +63,7 @@ app.use("/productos", productRouter);
 
 // Rutas para la API JSON
 app.use("/api", productRouter);
+app.use("/api/carts", cartRouter);
 
 app.use("/realtimeproducts", realtimeProductRouter);
 app.use("/carritos", cartRouter);
@@ -111,6 +116,6 @@ io.on("connection", async (socket) => {
   io.emit("mensaje1", "Hola cliente desde el backend");
 });
 
-hbs.handlebars.registerHelper('multiply', function (a, b) {
+hbs.handlebars.registerHelper("multiply", function (a, b) {
   return a * b;
 });
