@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { Cart } from "../models/carts.model.js";
 import { Product } from "../models/products.model.js";
 
@@ -66,8 +67,8 @@ router.post("/:cid/product/:pid", async (req, res) => {
       return res.status(404).send({ error: "Producto no encontrado" });
     }
 
-    const productIndex = cart.products.findIndex((p) =>
-      p.product.equals(product._id)
+    const productIndex = cart.products.findIndex(
+      (p) => p.product.toString() === product._id.toString()
     );
     if (productIndex !== -1) {
       cart.products[productIndex].quantity += 1;
@@ -90,13 +91,18 @@ router.delete("/:cid/products/:pid", async (req, res) => {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
 
+    const productId = req.params.pid;
+    console.log("Intentando eliminar producto con ID:", productId);
+
     const initialProductCount = cart.products.length;
 
+    // Aquí comparamos el ObjectId como cadena de texto
     cart.products = cart.products.filter(
-      (p) => !p.product.equals(req.params.pid)
+      (p) => p.product.toString() !== productId
     );
 
     if (initialProductCount === cart.products.length) {
+      console.log("Producto no encontrado en el carrito.");
       return res
         .status(404)
         .send({ error: "Producto no encontrado en el carrito" });
@@ -107,6 +113,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
     const updatedCart = await Cart.findOne({
       id: parseInt(req.params.cid),
     }).populate("products.product");
+
     res.status(200).send(updatedCart);
   } catch (error) {
     console.error("Error al eliminar el producto del carrito:", error);
@@ -141,8 +148,8 @@ router.put("/:cid/products/:pid", async (req, res) => {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
 
-    const productIndex = cart.products.findIndex((p) =>
-      p.product.equals(req.params.pid)
+    const productIndex = cart.products.findIndex(
+      (p) => p.product.toString() === req.params.pid.toString()
     );
     if (productIndex !== -1) {
       cart.products[productIndex].quantity = req.body.quantity;
