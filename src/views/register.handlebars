@@ -1,0 +1,62 @@
+<h1 class="text-center my-4">Registro</h1>
+
+<form
+  action="/api/sessions/register"
+  method="POST"
+  class="container w-25 bg-light p-4 rounded shadow"
+>
+  <div class="mb-3">
+    <label for="first_name" class="form-label">Nombre</label>
+    <input
+      type="text"
+      class="form-control"
+      id="first_name"
+      name="first_name"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="last_name" class="form-label">Apellido</label>
+    <input
+      type="text"
+      class="form-control"
+      id="last_name"
+      name="last_name"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" name="email" required />
+  </div>
+  <div class="mb-3">
+    <label for="age" class="form-label">Edad</label>
+    <input type="number" class="form-control" id="age" name="age" required />
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Contraseña</label>
+    <input
+      type="password"
+      class="form-control"
+      id="password"
+      name="password"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="role" class="form-label">Rol</label>
+    <select class="form-select" id="role" name="role" required>
+      <option value="user">Usuario</option>
+      <option value="admin">Administrador</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+</form>
+
+<div class="text-center mt-3">
+  <br />
+  <h5 class="ext-center font-weight-bold">Si ya tiene una cuenta,
+    <strong> <a href="/login">haga clic aquí</a></strong>
+    para iniciar sesión.</h5>
+  <br />
+</div>

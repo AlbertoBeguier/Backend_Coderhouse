@@ -1,0 +1,38 @@
+<h1 class="text-center my-4">Acceso Denegado</h1>
+
+<div
+  class="container w-50 p-4 rounded shadow-lg"
+  style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.35) !important;"
+>
+  <div class="alert text-center" role="alert" style="background-color: red;">
+    <h4 class="alert-heading mb-3" style="color: black; font-size: 1.5rem;">No
+      tienes permisos para acceder a esta página.</h4>
+    {{#if usuario}}
+      <p class="mb-0 text-center" style="color: white; font-size: 1.2rem;">
+        Tu rol actual es:
+        <strong>{{usuario.role}}</strong>
+      </p>
+    {{else}}
+      <p class="mb-0" style="color: white;">Por favor, inicia sesión para
+        acceder a esta página.</p>
+      <div class="mt-3">
+        <a href="/login" class="btn btn-light w-100">Iniciar Sesión</a>
+      </div>
+    {{/if}}
+  </div>
+</div>
+
+<div class="text-center mt-3">
+  <br />
+  <h5 class="text-center font-weight-bold">
+    {{#if usuario}}
+      Si desea volver a la página principal,
+      <strong><a href="/">haga clic aquí</a></strong>.
+    {{else}}
+      Si usted no está registrado,
+      <strong><a href="/register">haga clic aquí</a></strong>
+      para registrarse.
+    {{/if}}
+  </h5>
+  <br />
+</div>

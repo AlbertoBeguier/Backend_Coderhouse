@@ -1,0 +1,25 @@
+<h1 class="text-center my-4">Inicio de Sesión</h1>
+
+<form
+  action="/api/sessions/login"
+  method="POST"
+  class="container w-25 bg-light p-4 rounded shadow"
+>
+  <div class="mb-3">
+    <label for="usuario" class="form-label">Email:</label>
+    <input type="email" name="email" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Contraseña:</label>
+    <input type="password" name="password" class="form-control" required />
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Iniciar</button>
+</form>
+
+<div class="text-center mt-3">
+  <br />
+  <h5 class="ext-center font-weight-bold">Si usted no está registrado,
+    <strong><a href="/register">haga clic aquí</a></strong>
+    para registrarse.</h5>
+  <br />
+</div>

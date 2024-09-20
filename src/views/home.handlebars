@@ -1,0 +1,60 @@
+<div class="container mt-5">
+  <h1 class="text-center my-4">Bienvenido
+    {{usuario.first_name}}
+    {{usuario.last_name}}</h1>
+
+  <div class="w-75 mx-auto bg-light p-4 rounded shadow">
+    {{#if usuario}}
+      <div class="text-center mb-4">
+        <h4 class="text-center font-weight-bold">
+          <strong>{{usuario.email}}</strong>
+        </h4>
+        <h4 class="ext-center font-weight-bold">
+          <strong>Rol: {{usuario.role}}</strong></h4>
+      </div>
+      <div class="d-flex justify-content-between">
+        <button
+          onclick="location.href='/productos'"
+          class="btn btn-primary flex-grow-1 mx-1"
+        >
+          Productos
+        </button>
+        <button
+          onclick="location.href='/realtimeproducts'"
+          class="btn btn-primary flex-grow-1 mx-1"
+        >
+          Listado
+        </button>
+        <button
+          onclick="location.href='/carritos'"
+          class="btn btn-primary flex-grow-1 mx-1"
+        >
+          Carrito
+        </button>
+        <button
+          id="logout-btn"
+          onclick="logout()"
+          class="btn btn-danger flex-grow-1 mx-1"
+        >
+          Logout
+        </button>
+
+      </div>
+    {{else}}
+      <p class="text-center mb-4">Por favor, inicia sesión para ver tu
+        información.</p>
+      <div class="d-grid">
+        <button onclick="location.href='/login'" class="btn btn-primary">
+          Iniciar Sesión
+        </button>
+      </div>
+    {{/if}}
+  </div>
+</div>
+
+<script>
+  function logout() { fetch('/api/sessions/logout', { method: 'POST',
+  credentials: 'same-origin' }) .then(response => { if (response.ok) {
+  window.location.href = '/'; } else { console.error('Error al cerrar sesión');
+  } }) .catch(error => { console.error('Error:', error); }); }
+</script>

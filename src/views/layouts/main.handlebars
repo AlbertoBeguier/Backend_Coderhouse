@@ -14,24 +14,34 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
+    <style>
+      .btn-home { display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; padding: 0; }
+    </style>
   </head>
   <body>
     <header>
       <nav class="navbar navbar-light bg-light fixed-top">
-        <div class="container-fluid d-flex justify-content-center">
+        <div
+          class="container-fluid d-flex justify-content-center align-items-center"
+        >
           <a class="navbar-brand a-aling" href="/">Tienda Virtual HIGH CLASS</a>
-          <button
-            onclick="location.href='/productos'"
-            class="btn btn-primary mx-1"
-          >Mostrar todos los productos</button>
-          <button
-            onclick="location.href='/realtimeproducts'"
-            class="btn btn-primary mx-1"
-          >Listado de Productos</button>
-          <button
-            onclick="location.href='/carritos'"
-            class="btn btn-primary mx-1"
-          >Ver Carrito</button>
+          <div class="d-flex align-items-center">
+            <button
+              onclick="history.back()"
+              class="btn btn-secondary mx-1"
+            >Volver</button>
+            <a href="/home" class="btn btn-primary mx-1 btn-home">
+              <i class="fas fa-home"></i>
+            </a>
+            {{#unless usuario}}
+              <button
+                id="login-btn"
+                onclick="location.href='/login'"
+                class="btn btn-primary mx-1"
+              >Login</button>
+            {{/unless}}
+          </div>
         </div>
       </nav>
     </header>
@@ -51,6 +61,7 @@
         </p>
       </footer>
     </div>
+
     <script
       src="https://cdn.socket.io/4.7.5/socket.io.min.js"
       integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
@@ -64,6 +75,5 @@
       crossorigin="anonymous"
     ></script>
     <script src="/main.js"></script>
-    <script src="/script.js"></script>
   </body>
 </html>

@@ -1,55 +1,92 @@
-<div class="container">
-  <h1 class="text-center">Agregar (eliminar) Productos en tiempo real</h1>
+{{log usuario}}
 
-  <form id="product-form" class="product-form">
-    <input
-      type="text"
-      id="product-title"
-      placeholder="Título del producto"
-      required
-      class="form-control input-wide"
-    />
-    <textarea
-      id="product-description"
-      placeholder="Descripción del producto"
-      required
-      class="form-control input-wide"
-    ></textarea>
-    <div class="form-row">
-      <input
-        type="text"
-        id="product-code"
-        placeholder="Código del producto"
-        required
-        class="form-control input-small"
-      />
-      <input
-        type="number"
-        id="product-price"
-        placeholder="Precio del producto"
-        required
-        class="form-control input-small"
-      />
-      <input
-        type="number"
-        id="product-stock"
-        placeholder="Stock del producto"
-        required
-        class="form-control input-small"
-      />
-    </div>
-    <input
-      type="text"
-      id="product-thumbnails"
-      placeholder="Thumbnails del producto (opcional)"
-      class="form-control input-wide"
-    />
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
-    </div>
-  </form>
+<div class="container mt-5">
+  {{#if usuario}}
+    {{#if (eq usuario.role "admin")}}
+      <h1 class="text-center mb-4">Agregar o Eliminar Productos en Tiempo Real</h1>
 
-  <div id="productos-listado"></div>
+      <form id="product-form" class="product-form mb-5">
+        <div class="mb-3">
+          <input
+            type="text"
+            id="product-title"
+            placeholder="Título del producto"
+            required
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <textarea
+            id="product-description"
+            placeholder="Descripción del producto"
+            required
+            class="form-control"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <input
+              type="text"
+              id="product-code"
+              placeholder="Código del producto"
+              required
+              class="form-control"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              id="product-price"
+              placeholder="Precio del producto"
+              required
+              class="form-control"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              id="product-stock"
+              placeholder="Stock del producto"
+              required
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="mb-3">
+          <input
+            type="text"
+            id="product-thumbnails"
+            placeholder="URLs de las imágenes (separadas por comas)"
+            class="form-control"
+          />
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Agregar Producto</button>
+        </div>
+      </form>
+
+      <h2 class="text-center mb-4">Listado de Productos</h2>
+      <div id="productos-listado" class="row">
+        <!-- Los productos se cargarán aquí dinámicamente -->
+      </div>
+    {{else}}
+      <div class="alert alert-danger text-center" role="alert">
+        <h2 class="alert-heading">Acceso Denegado</h2>
+        <p>Lo sentimos, no tienes permisos para acceder a esta página.</p>
+        <hr />
+        <p class="mb-0">Tu rol actual es: {{usuario.role}}</p>
+      </div>
+    {{/if}}
+  {{else}}
+    <div class="alert alert-warning text-center" role="alert">
+      <h2 class="alert-heading">Acceso Denegado</h2>
+      <p>Por favor, inicia sesión para acceder a esta página.</p>
+      <hr />
+      <a href="/login" class="btn btn-primary">Iniciar Sesión</a>
+    </div>
+  {{/if}}
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
 <script src="/main.js"></script>
