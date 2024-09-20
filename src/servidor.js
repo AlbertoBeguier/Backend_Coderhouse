@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import mongoose from "mongoose";
+import "./database.js";
 import { fileURLToPath } from "url";
 import { create } from "express-handlebars";
 import { Server } from "socket.io";
@@ -13,15 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 8080;
-
-mongoose
-  .connect(
-    "mongodb+srv://aabeguier:5279167134@clustercoder.kzn29.mongodb.net/ProyectoCoder?retryWrites=true&w=majority&appName=ClusterCoder",
-    {}
-  )
-  .then(() => console.log("Conectado a MongoDB"))
-  .catch((err) => console.error("Error al conectar a MongoDB:", err));
+const PORT = 8000;
 
 const hbs = create({
   defaultLayout: "main",
