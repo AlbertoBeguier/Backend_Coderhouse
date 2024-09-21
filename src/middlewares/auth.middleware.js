@@ -9,7 +9,7 @@ export const authMiddleware = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, "palabrasecretaparatoken");
     req.user = decoded;
-    console.log("Usuario autenticado:", req.user); // Añade este log
+    console.log("Usuario autenticado:", req.user);
     next();
   } catch (error) {
     console.error("Error de autenticación:", error);

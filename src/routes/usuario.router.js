@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
       first_name,
       last_name,
       email,
-      password: createHash(password), // Asegúrate de hashear la contraseña
+      password: createHash(password), // encripta la contraseña
       age,
       role: role || "user",
     });
@@ -108,10 +108,10 @@ router.get(
   "/current",
   passport.authenticate("current", { session: false }),
   (req, res) => {
-    console.log("Usuario autenticado:", req.user); // Línea de depuración
+    console.log("Usuario autenticado:", req.user); // depuración
     res.render("home", {
       title: "Home",
-      usuario: req.user, // Pasamos directamente req.user sin modificaciones
+      usuario: req.user, // pasar directamente req.user sin modificaciones
     });
   }
 );
