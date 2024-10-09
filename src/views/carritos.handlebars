@@ -4,34 +4,34 @@
   {{#if carritos.length}}
     {{#each carritos}}
       <div class="carrito">
-       
         <ul>
           {{#each products}}
             <li>
-              {{product.title}} - Cantidad: {{quantity}} - Precio: ${{product.price}}
-              <button 
-                class="btn btn-danger btn-sm delete-product-btn" 
-                data-cart-id="{{../id}}" 
-                data-product-id="{{product._id}}">
+              {{product.title}}
+              - Cantidad: {{quantity}}
+              - Precio: ${{product.price}}
+              <button
+                class="btn btn-danger btn-sm delete-product-btn"
+                data-product-id="{{product._id}}"
+                data-cart-id="{{../_id}}"
+              >
                 Eliminar
               </button>
-              <br>Subtotal: ${{multiply product.price quantity}}
-              
+              <br />Subtotal: ${{multiply product.price quantity}}
             </li>
           {{/each}}
         </ul>
-        
+
         <!-- Total General del Carrito -->
         <h3>Total del Carrito: ${{calculateTotal products}}</h3>
       </div>
-      <hr>
+      <hr />
     {{/each}}
+    <button id="empty-cart-btn" class="btn btn-warning" data-cart-id="{{carritos.[0]._id}}">Vaciar Carrito</button>
   {{else}}
-    <p>No se encontraron carritos.</p>
+    <p>No se encontraron productos en tu carrito.</p>
   {{/if}}
 </div>
 
 <script src="/botonEliminarProductoCarrito.js"></script>
-
-
 

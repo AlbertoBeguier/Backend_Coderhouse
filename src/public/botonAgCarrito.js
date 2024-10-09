@@ -1,60 +1,44 @@
-document.getElementById('add-to-cart-btn').addEventListener('click', function() {
-  const productId = this.getAttribute('data-product-id');
-  const cartId = this.getAttribute('data-cart-id'); // Obtener el cartId si está disponible
+document.addEventListener("DOMContentLoaded", function () {
+  const addToCartButtons = document.querySelectorAll(".add-to-cart-btn"); // Cambiado a clase
+  const cartIcon = document.getElementById("cart-count");
 
-  // Si `cartId` está presente, agregar al carrito existente
-  const cartFetchUrl = cartId ? `/carritos/${cartId}/product/${productId}` : '/carritos';
-
-  if (cartId) {
-    // Agregar producto al carrito existente
-    fetch(cartFetchUrl, { 
-      method: 'POST'
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Error al agregar el producto al carrito');
-      }
-      return response.json();
-    })
-    .then(data => {
-      alert('Producto agregado al carrito existente');
-      console.log('Producto agregado:', data);
-    })
-    .catch(error => {
-      console.error('Error al agregar el producto al carrito:', error);
-      alert('Hubo un error al agregar el producto al carrito.');
-    });
-  } else {
-    // Crear un nuevo carrito y agregar el producto
-    fetch('/carritos', {
-      method: 'POST'
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Error al crear un nuevo carrito');
-      }
-      return response.json();
-    })
-    .then(cartData => {
-      const newCartId = cartData.id;
-      return fetch(`/carritos/${newCartId}/product/${productId}`, {
-        method: 'POST'
-      });
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Error al agregar el producto al nuevo carrito');
-      }
-      return response.json();
-    })
-    .then(data => {
-      alert('Producto agregado al nuevo carrito');
-      console.log('Producto agregado:', data);
-    })
-    .catch(error => {
-      console.error('Error al agregar el producto al nuevo carrito:', error);
-      alert('Hubo un error al agregar el producto al nuevo carrito.');
-    });
+  if (!cartIcon) {
+    console.error("No se encontró el ícono del carrito en el DOM.");
+    return;
   }
-});
 
+  addToCartButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const productId = this.getAttribute("data-product-id");
+
+      if (!productId) {
+        console.error("ID de producto no encontrado.");
+        return;
+      }
+
+      fetch(`/carritos/add/${productId}`, { method: "POST" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error al agregar el producto al carrito");
+          }
+          return response.json();
+        })
+        .then((cart) => {
+          if (cart.products && cart.products.length > 0) {
+            const cartCount = cart.products.reduce(
+              (acc, product) => acc + product.quantity,
+              0
+            );
+            cartIcon.textContent = cartCount; // Actualiza el contador de productos
+          } else {
+            cartIcon.textContent = 0;
+          }
+          alert("Producto agregado al carrito");
+        })
+        .catch((error) => {
+          console.error("Error al agregar producto al carrito:", error);
+          alert("Hubo un error al agregar el producto al carrito.");
+        });
+    });
+  });
+});

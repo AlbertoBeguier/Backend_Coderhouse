@@ -13,12 +13,15 @@
         {{product.description}}</p>
       <p class="precio-detalle">Precio: ${{product.price}}</p>
       <p class="stock-detalle">Stock: {{product.stock}}</p>
-      <button id="add-to-cart-btn" class="btn btn-primary" data-product-id="{{product.id}}">Agregar al Carrito</button>
+      <!-- Usamos una clase en lugar de id -->
+      <button
+        class="add-to-cart-btn btn btn-primary"
+        data-product-id="{{product._id}}"
+      >
+        Agregar al Carrito
+      </button>
     </div>
   </div>
 </div>
 
 <script src="/botonAgCarrito.js"></script>
-
-
-
