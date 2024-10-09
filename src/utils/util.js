@@ -1,4 +1,7 @@
-import bcrypt from "bcrypt"; 
-const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10)); 
-const isValidPassword = (password, user) => bcrypt.compareSync(password, user.password); 
-export {createHash, isValidPassword};
+import bcrypt from "bcrypt";
+
+// Comparar la contraseña ingresada con la contraseña hasheada del usuario (en login o autenticación)
+const isValidPassword = (password, user) =>
+  bcrypt.compareSync(password, user.password);
+
+export { isValidPassword };

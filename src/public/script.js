@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const images = [
     "https://tecnosoluciones.com/wp-content/uploads/2023/04/que-productos-vender-en-una-tienda-virtual-o-comercio-electronico.jpg",
-    "https://www.niubiz.com.pe/wp-content/uploads/2022/04/Tienda-Virtual-Niubiz.jpg",
+    "https://s3.amazonaws.com/mitiendape/uploads/mitienda_/blog/cellphone%20appsmesa%20de%20trabajo%2011-100.jpg",
     "https://thelogisticsworld.com/wp-content/uploads/2022/09/Concepto-de-compras-en-linea-y-comercio-electronico.jpg",
   ];
 
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function verCaracteristicas(title) {
   const productos = document.querySelectorAll(".producto");
-  productos.forEach(producto => {
+  productos.forEach((producto) => {
     if (producto.querySelector("h2").textContent === title) {
       const caracteristicas = producto.querySelector(".caracteristicas");
       const display = caracteristicas.style.display;

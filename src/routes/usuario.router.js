@@ -1,7 +1,7 @@
 import { Router } from "express";
 import UserModel from "../models/users.model.js";
 import jwt from "jsonwebtoken";
-import { createHash, isValidPassword } from "../utils/util.js";
+import { isValidPassword } from "../utils/util.js"; // Solo importamos isValidPassword
 import passport from "passport";
 
 const router = Router();
@@ -19,11 +19,12 @@ router.post("/register", async (req, res) => {
         .send("El usuario ya existe en nuestra base de datos");
     }
 
+    // No necesitamos usar createHash aquí porque el middleware pre-save del modelo hasheará la contraseña automáticamente
     const nuevoUsuario = new UserModel({
       first_name,
       last_name,
       email,
-      password: createHash(password), // encripta la contraseña
+      password, // Guardamos la contraseña directamente, el middleware encriptará
       age,
       role: role || "user",
     });
