@@ -39,7 +39,7 @@ router.delete("/:productId", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
     const productId = req.params.productId;
-    const cart = await CartManager.removeProductFromCart(userId, productId);
+    const cart = await CartManager.removeOneProductUnit(userId, productId); // Cambié a removeOneProductUnit para manejar cantidades
     res.status(200).json(cart);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -21,7 +21,7 @@ const cartSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false } // Desactiva el control de versiones
 );
 
 export const Cart = mongoose.model("Cart", cartSchema);

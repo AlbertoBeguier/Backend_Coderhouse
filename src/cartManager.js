@@ -37,16 +37,13 @@ class CartManager {
         throw new Error("Producto no encontrado");
       }
 
-      // Verificar si el producto ya está en el carrito
       const productExist = cart.products.find(
         (p) => p.product.toString() === product._id.toString()
       );
 
       if (!productExist) {
-        // Si el producto no está en el carrito, lo añadimos
         cart.products.push({ product: product._id, quantity });
       } else {
-        // Si ya está, solo incrementamos la cantidad
         productExist.quantity += quantity;
       }
 
@@ -63,6 +60,7 @@ class CartManager {
   async getUserCart(userId) {
     try {
       const cart = await Cart.findOne({ userId }).populate("products.product");
+      console.log("Carrito encontrado:", cart);
       return cart;
     } catch (error) {
       console.error("Error al obtener el carrito:", error);
@@ -70,10 +68,14 @@ class CartManager {
     }
   }
 
-  // Método para eliminar un producto del carrito
-  async removeProductFromCart(userId, productId) {
+  // Método para eliminar una unidad de un producto del carrito
+  async removeOneProductUnit(userId, productId) {
     try {
       const cart = await this.getUserCart(userId);
+
+      if (!cart) {
+        throw new Error("Carrito no encontrado");
+      }
 
       let product;
       if (mongoose.Types.ObjectId.isValid(productId)) {
@@ -86,14 +88,38 @@ class CartManager {
         throw new Error("Producto no encontrado");
       }
 
-      cart.products = cart.products.filter(
-        (p) => p.product.toString() !== product._id.toString()
+      console.log(`Producto encontrado en la base de datos: ${product}`);
+
+      // Log adicional para verificar todos los productos en el carrito
+      console.log("Productos en el carrito:", cart.products);
+
+      // Convertimos ambos IDs a cadenas para compararlos correctamente
+      const productInCart = cart.products.find(
+        (p) => p.product._id.toString() === product._id.toString()
       );
+
+      console.log(`Producto encontrado en el carrito: ${productInCart}`);
+
+      if (!productInCart) {
+        throw new Error("Producto no encontrado en el carrito");
+      }
+
+      if (productInCart.quantity > 1) {
+        productInCart.quantity -= 1;
+      } else {
+        cart.products = cart.products.filter(
+          (p) => p.product._id.toString() !== product._id.toString()
+        );
+      }
+
       cart.markModified("products");
       await cart.save();
       return cart;
     } catch (error) {
-      console.error("Error al eliminar producto del carrito:", error);
+      console.error(
+        "Error al eliminar una unidad de producto del carrito:",
+        error
+      );
       throw error;
     }
   }
