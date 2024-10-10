@@ -2,6 +2,7 @@ import UserModel from "../models/users.model.js";
 import jwt from "jsonwebtoken";
 import { isValidPassword } from "../utils/util.js";
 import database from "../config/database.js";
+import UserDTO from "../dto/users.dto.js";
 
 class UserService {
   constructor() {
@@ -16,17 +17,22 @@ class UserService {
       throw new Error("El usuario ya existe en nuestra base de datos");
     }
 
-    const nuevoUsuario = new UserModel({
+    const userDTO = new UserDTO({
       first_name,
       last_name,
       email,
-      password,
       age,
       role: role || "user",
     });
 
+    const nuevoUsuario = new UserModel({
+      ...userDTO,
+      password,
+      full_name: userDTO.full_name, // Usamos el fullname generado por el DTO
+    });
+
     await nuevoUsuario.save();
-    return nuevoUsuario;
+    return this.getUserDTO(nuevoUsuario);
   }
 
   async loginUser(email, password) {
@@ -39,21 +45,32 @@ class UserService {
       throw new Error("Contraseña incorrecta");
     }
 
-    return usuarioEncontrado;
+    return this.getUserDTO(usuarioEncontrado);
   }
 
   generateToken(user) {
+    const userDTO = this.getUserDTO(user);
     return jwt.sign(
       {
-        id: user._id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        role: user.role,
+        id: userDTO.id,
+        email: userDTO.email,
+        first_name: userDTO.first_name,
+        last_name: userDTO.last_name,
+        fullname: userDTO.fullname,
+        role: userDTO.role,
       },
       "palabrasecretaparatoken",
       { expiresIn: "1h" }
     );
+  }
+
+  getUserDTO(user) {
+    return new UserDTO(user);
+  }
+
+  async getUserById(userId) {
+    const user = await UserModel.findById(userId);
+    return user ? this.getUserDTO(user) : null;
   }
 }
 

@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  full_name: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -38,7 +42,7 @@ const userSchema = new mongoose.Schema({
 // Middleware para encriptar la contraseña antes de guardar el usuario
 userSchema.pre("save", function (next) {
   if (this.isModified("password") || this.isNew) {
-    this.password = bcrypt.hashSync(this.password, 10); // 10 es el número de saltos para la encriptación
+    this.password = bcrypt.hashSync(this.password, 10);
   }
   next();
 });
