@@ -1,5 +1,3 @@
-// C:\Users\aabeg\Dropbox\1.JavaScript\BACKEND\CoderHouse\Backend I\proyectoCoder\src\controllers\cart.controller.js
-
 import cartService from "../services/cart.service.js";
 
 class CartController {
