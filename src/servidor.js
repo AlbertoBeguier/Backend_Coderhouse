@@ -96,17 +96,6 @@ app.use("/api/sessions", usuarioRouter);
 app.use("/realtimeproducts", realtimeProductRouter);
 app.use("/carritos", cartRouter);
 
-// Ruta específica para productos
-app.get("/productos", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.render("productos", { title: "Productos", products: products });
-  } catch (error) {
-    console.error("Error al obtener productos:", error);
-    res.status(500).send("Error interno del servidor");
-  }
-});
-
 const httpServer = app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
