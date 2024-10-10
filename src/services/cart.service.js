@@ -1,21 +1,51 @@
-import { Cart } from "../models/carts.model.js";
+// C:\Users\aabeg\Dropbox\1.JavaScript\BACKEND\CoderHouse\Backend I\proyectoCoder\src\services\cart.service.js
+
+import { daoConfig } from "../config/configDao.js";
 import { Product } from "../models/products.model.js";
 import mongoose from "mongoose";
-import database from "../config/database.js";
+import fs from "fs/promises";
 
 class CartService {
   constructor() {
-    database;
+    this.dao = null;
+  }
+
+  async initializeDAO() {
+    if (!this.dao) {
+      if (daoConfig.useJsonStorage) {
+        const { default: createJsonCartDAO } = await import(
+          "../dao/jsonCartDAO.js"
+        );
+        this.dao = createJsonCartDAO();
+      } else {
+        const { default: createMongoCartDAO } = await import(
+          "../dao/mongoCartDAO.js"
+        );
+        this.dao = createMongoCartDAO();
+      }
+    }
+  }
+
+  async getProductFromJson(productId) {
+    try {
+      const data = await fs.readFile(daoConfig.productJsonFilePath, "utf8");
+      const products = JSON.parse(data);
+      return products.find(
+        (p) =>
+          p._id.$oid === productId ||
+          p._id === productId ||
+          p.id.toString() === productId
+      );
+    } catch (error) {
+      console.error("Error al leer el archivo JSON de productos:", error);
+      throw error;
+    }
   }
 
   async createCartForUser(userId) {
+    await this.initializeDAO();
     try {
-      let cart = await Cart.findOne({ userId });
-      if (!cart) {
-        cart = new Cart({ userId, products: [] });
-        await cart.save();
-      }
-      return cart;
+      return await this.dao.createCartForUser(userId);
     } catch (error) {
       console.error("Error al crear carrito:", error);
       throw error;
@@ -23,28 +53,30 @@ class CartService {
   }
 
   async addProductToUserCart(userId, productId, quantity = 1) {
+    await this.initializeDAO();
     try {
-      const cart = await this.createCartForUser(userId);
       let product;
-      if (mongoose.Types.ObjectId.isValid(productId)) {
-        product = await Product.findById(productId);
+      if (daoConfig.useJsonStorage) {
+        product = await this.getProductFromJson(productId);
       } else {
-        product = await Product.findOne({ id: productId });
+        if (mongoose.Types.ObjectId.isValid(productId)) {
+          product = await Product.findById(productId);
+        } else {
+          product = await Product.findOne({ id: productId });
+        }
       }
       if (!product) {
+        console.error(`Producto no encontrado con ID: ${productId}`);
         throw new Error("Producto no encontrado");
       }
-      const productExist = cart.products.find(
-        (p) => p.product.toString() === product._id.toString()
+      const productIdToUse = daoConfig.useJsonStorage
+        ? product._id.$oid || product._id || product.id.toString()
+        : product._id.toString();
+      return await this.dao.addProductToUserCart(
+        userId,
+        productIdToUse,
+        quantity
       );
-      if (!productExist) {
-        cart.products.push({ product: product._id, quantity });
-      } else {
-        productExist.quantity += quantity;
-      }
-      cart.markModified("products");
-      await cart.save();
-      return cart;
     } catch (error) {
       console.error("Error al agregar producto al carrito:", error);
       throw error;
@@ -52,11 +84,26 @@ class CartService {
   }
 
   async getUserCart(userId) {
+    await this.initializeDAO();
     try {
-      const cart = await Cart.findOne({ userId }).populate("products.product");
+      const cart = await this.dao.getUserCart(userId);
       if (!cart) {
         return { carritos: [], total: 0 };
       }
+
+      if (daoConfig.useJsonStorage) {
+        for (let item of cart.products) {
+          const product = await this.getProductFromJson(
+            item.product.$oid || item.product
+          );
+          if (product) {
+            item.product = product;
+          }
+        }
+      } else {
+        // Existing MongoDB population logic
+      }
+
       const total = this.calculateTotal(cart);
       return { carritos: [cart], total };
     } catch (error) {
@@ -66,25 +113,9 @@ class CartService {
   }
 
   async removeOneProductUnit(userId, productId) {
+    await this.initializeDAO();
     try {
-      const cart = await Cart.findOne({ userId }).populate("products.product");
-      if (!cart) {
-        throw new Error("Carrito no encontrado");
-      }
-      const productIndex = cart.products.findIndex(
-        (p) => p.product._id.toString() === productId
-      );
-      if (productIndex === -1) {
-        throw new Error("Producto no encontrado en el carrito");
-      }
-      if (cart.products[productIndex].quantity > 1) {
-        cart.products[productIndex].quantity -= 1;
-      } else {
-        cart.products.splice(productIndex, 1);
-      }
-      cart.markModified("products");
-      await cart.save();
-      return cart;
+      return await this.dao.removeOneProductUnit(userId, productId);
     } catch (error) {
       console.error(
         "Error al eliminar una unidad de producto del carrito:",
@@ -95,14 +126,9 @@ class CartService {
   }
 
   async emptyCart(userId) {
+    await this.initializeDAO();
     try {
-      const cart = await Cart.findOne({ userId });
-      if (!cart) {
-        throw new Error("Carrito no encontrado");
-      }
-      cart.products = [];
-      await cart.save();
-      return cart;
+      return await this.dao.emptyCart(userId);
     } catch (error) {
       console.error("Error al vaciar el carrito:", error);
       throw error;
@@ -110,12 +136,9 @@ class CartService {
   }
 
   async getCartCount(userId) {
+    await this.initializeDAO();
     try {
-      const cart = await Cart.findOne({ userId });
-      if (!cart || !cart.products.length) {
-        return 0;
-      }
-      return cart.products.reduce((acc, product) => acc + product.quantity, 0);
+      return await this.dao.getCartCount(userId);
     } catch (error) {
       console.error("Error al obtener el conteo del carrito:", error);
       throw error;
@@ -123,10 +146,10 @@ class CartService {
   }
 
   calculateTotal(cart) {
-    return cart.products.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0
-    );
+    return cart.products.reduce((sum, item) => {
+      const price = item.product.price || 0;
+      return sum + price * item.quantity;
+    }, 0);
   }
 }
 
