@@ -1,22 +1,22 @@
 import express from "express";
-import { Product } from "../models/products.model.js"; 
+import { Product } from "../models/products.model.js";
 
 const router = express.Router();
 
 // Ruta para obtener todos los productos en formato JSON desde la base de datos
 router.get("/api/products", async (req, res) => {
   try {
-    const sortOrder = req.query.sort === 'asc' ? 1 : -1; // Verifica si se solicita un orden ascendente o descendente
+    const sortOrder = req.query.sort === "asc" ? 1 : -1; // Verifica si se solicita un orden ascendente o descendente
     const products = await Product.find().sort({ price: sortOrder }); // Ordena los productos por precio
     res.status(200).json({
       status: "success",
-      payload: products  // Devuelve los productos en formato JSON
+      payload: products, // Devuelve los productos en formato JSON
     });
   } catch (error) {
-    res.status(500).json({ 
-      status: "error", 
-      message: "Error al obtener productos", 
-      error: error.message 
+    res.status(500).json({
+      status: "error",
+      message: "Error al obtener productos",
+      error: error.message,
     });
   }
 });
@@ -28,20 +28,20 @@ router.get("/productos", async (req, res) => {
     const options = {
       page: parseInt(page),
       limit: parseInt(limit),
-      lean: true
+      lean: true,
     };
 
     const result = await Product.paginate({}, options);
 
-    res.render("productos", { 
-      title: "Productos", 
+    res.render("productos", {
+      title: "Productos",
       products: result.docs,
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
       prevPage: result.prevPage,
       nextPage: result.nextPage,
       currentPage: result.page,
-      totalPages: result.totalPages
+      totalPages: result.totalPages,
     });
   } catch (error) {
     res.status(500).send({ error: "Error al obtener productos" });
@@ -66,7 +66,14 @@ router.get("/productos/:pid", async (req, res) => {
 router.post("/productos", async (req, res) => {
   try {
     const { title, description, code, price, stock, thumbnails } = req.body;
-    const newProduct = new Product({ title, description, code, price, stock, thumbnails });
+    const newProduct = new Product({
+      title,
+      description,
+      code,
+      price,
+      stock,
+      thumbnails,
+    });
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
@@ -89,7 +96,11 @@ router.delete("/productos/:pid", async (req, res) => {
 
 router.put("/productos/:pid", async (req, res) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(req.params.pid, req.body, { new: true });
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.pid,
+      req.body,
+      { new: true }
+    );
     if (updatedProduct) {
       res.status(200).json(updatedProduct);
     } else {

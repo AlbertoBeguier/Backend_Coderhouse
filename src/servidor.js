@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import "./database.js";
+import "../database.js";
 import { fileURLToPath } from "url";
 import { create } from "express-handlebars";
 import { Server } from "socket.io";
