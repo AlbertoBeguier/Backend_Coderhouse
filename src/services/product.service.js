@@ -2,33 +2,63 @@ import { Product } from "../models/products.model.js";
 
 class ProductService {
   async getAllProducts(sortOrder) {
-    return await Product.find().sort({ price: sortOrder });
+    try {
+      return await Product.find().sort({ price: sortOrder });
+    } catch (error) {
+      console.error("Error al obtener productos:", error);
+      throw error;
+    }
   }
 
   async getProductsPaginated(page, limit) {
-    const options = {
-      page: parseInt(page),
-      limit: parseInt(limit),
-      lean: true,
-    };
-    return await Product.paginate({}, options);
+    try {
+      const options = {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        lean: true,
+      };
+      return await Product.paginate({}, options);
+    } catch (error) {
+      console.error("Error al obtener productos paginados:", error);
+      throw error;
+    }
   }
 
   async getProductById(id) {
-    return await Product.findById(id);
+    try {
+      return await Product.findById(id);
+    } catch (error) {
+      console.error("Error al obtener producto por ID:", error);
+      throw error;
+    }
   }
 
   async createProduct(productData) {
-    const newProduct = new Product(productData);
-    return await newProduct.save();
+    try {
+      const newProduct = new Product(productData);
+      return await newProduct.save();
+    } catch (error) {
+      console.error("Error al crear producto:", error);
+      throw error;
+    }
   }
 
   async deleteProduct(id) {
-    return await Product.findByIdAndDelete(id);
+    try {
+      return await Product.findByIdAndDelete(id);
+    } catch (error) {
+      console.error("Error al eliminar producto:", error);
+      throw error;
+    }
   }
 
   async updateProduct(id, updateData) {
-    return await Product.findByIdAndUpdate(id, updateData, { new: true });
+    try {
+      return await Product.findByIdAndUpdate(id, updateData, { new: true });
+    } catch (error) {
+      console.error("Error al actualizar producto:", error);
+      throw error;
+    }
   }
 }
 

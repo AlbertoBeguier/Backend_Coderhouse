@@ -3,7 +3,6 @@ import cartService from "../services/cart.service.js";
 class CartController {
   async addProductToCart(req, res) {
     try {
-      console.log("Usuario autenticado:", req.user);
       const userId = req.user.id;
       const productId = req.params.productId;
       const cart = await cartService.addProductToUserCart(userId, productId);
