@@ -1,5 +1,3 @@
-// C:\Users\aabeg\Dropbox\1.JavaScript\BACKEND\CoderHouse\Backend I\proyectoCoder\src\routes\carts.router.js
-
 import express from "express";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import CartController from "../controllers/cart.controller.js";

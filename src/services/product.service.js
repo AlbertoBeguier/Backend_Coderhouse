@@ -1,6 +1,11 @@
 import { Product } from "../models/products.model.js";
+import database from "../config/database.js";
 
 class ProductService {
+  constructor() {
+    database;
+  }
+
   async getAllProducts(sortOrder) {
     try {
       return await Product.find().sort({ price: sortOrder });

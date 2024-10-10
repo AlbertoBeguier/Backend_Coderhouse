@@ -1,8 +1,13 @@
 import { Cart } from "../models/carts.model.js";
 import { Product } from "../models/products.model.js";
 import mongoose from "mongoose";
+import database from "../config/database.js";
 
 class CartService {
+  constructor() {
+    database;
+  }
+
   async createCartForUser(userId) {
     try {
       let cart = await Cart.findOne({ userId });

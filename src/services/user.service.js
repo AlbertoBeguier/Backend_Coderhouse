@@ -1,8 +1,13 @@
 import UserModel from "../models/users.model.js";
 import jwt from "jsonwebtoken";
 import { isValidPassword } from "../utils/util.js";
+import database from "../config/database.js";
 
 class UserService {
+  constructor() {
+    database;
+  }
+
   async registerUser(userData) {
     const { first_name, last_name, email, password, age, role } = userData;
 

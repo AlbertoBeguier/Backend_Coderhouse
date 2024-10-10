@@ -1,6 +1,11 @@
 import { Product } from "../models/products.model.js";
+import database from "../config/database.js";
 
 class RealTimeProductsService {
+  constructor() {
+    database;
+  }
+
   async getAllProducts() {
     return await Product.find();
   }
