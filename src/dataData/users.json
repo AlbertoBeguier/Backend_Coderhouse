@@ -1,0 +1,38 @@
+[
+  {
+    "_id": {
+      "$oid": "66edd070bb55491aac8d362f"
+    },
+    "first_name": "Alberto",
+    "last_name": "Beguier",
+    "email": "aabeguier@hotmail.com",
+    "password": "$2b$10$PsBOLjV2yfeMeKDnbUcg9.OitWYUIXx.wp3Iwt3Q7yIZeljjMMTHS",
+    "age": 52,
+    "role": "admin",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66f6ab5c629bea6a2bb742f8"
+    },
+    "first_name": "Saúl Iván",
+    "last_name": "Belbey",
+    "email": "saul@gmail.com",
+    "password": "$2b$10$lkaJ7s7YEtM.X68MYootmujJrFEqCse8EwZUnkVzhVKGGdsq9KIpK",
+    "age": 36,
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6706f2d400ca676f8c3ebad3"
+    },
+    "first_name": "Julio Argentino",
+    "last_name": "Roca",
+    "email": "jr@hotmail.com",
+    "password": "$2b$10$XX/1XF09UGMu95aLTN6Qv.YPhJyX2vXEPpz2w9xLQHwvNmrRyBU1C",
+    "age": 100,
+    "role": "user",
+    "__v": 0
+  }
+]
