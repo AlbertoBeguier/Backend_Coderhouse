@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const cartSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: mongoose.Schema.Types.Mixed,
       required: true,
     },
     products: [
@@ -21,7 +20,7 @@ const cartSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true, versionKey: false } // Desactiva el control de versiones
+  { timestamps: true, versionKey: false }
 );
 
 export const Cart = mongoose.model("Cart", cartSchema);

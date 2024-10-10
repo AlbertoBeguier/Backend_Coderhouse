@@ -1,5 +1,3 @@
-// C:\Users\aabeg\Dropbox\1.JavaScript\BACKEND\CoderHouse\Backend I\proyectoCoder\src\dao\jsonCartDAO.js
-
 import fs from "fs/promises";
 import { daoConfig } from "../config/configDao.js";
 import { v4 as uuidv4 } from "uuid";
@@ -13,7 +11,6 @@ async function readJsonFile() {
     return JSON.parse(data);
   } catch (error) {
     if (error.code === "ENOENT") {
-      // Si el archivo no existe, devuelve un array vacío
       return [];
     }
     throw error;
@@ -52,9 +49,13 @@ function createJsonCartDAO() {
     async addProductToUserCart(userId, productId, quantity = 1) {
       try {
         const carts = await readJsonFile();
-        const cartIndex = carts.findIndex((c) => c.userId.$oid === userId);
+        console.log("Carts before adding product:", carts);
+        console.log("Adding product to cart for userId:", userId);
+        let cartIndex = carts.findIndex((c) => c.userId.$oid === userId);
         if (cartIndex === -1) {
-          throw new Error("Carrito no encontrado");
+          const newCart = await this.createCartForUser(userId);
+          carts.push(newCart);
+          cartIndex = carts.length - 1;
         }
         const productIndex = carts[cartIndex].products.findIndex(
           (p) => p.product.$oid === productId
@@ -70,6 +71,7 @@ function createJsonCartDAO() {
         }
         carts[cartIndex].updatedAt = { $date: new Date().toISOString() };
         await writeJsonFile(carts);
+        console.log("Cart after adding product:", carts[cartIndex]);
         return carts[cartIndex];
       } catch (error) {
         console.error("Error al agregar producto al carrito:", error);
@@ -80,7 +82,11 @@ function createJsonCartDAO() {
     async getUserCart(userId) {
       try {
         const carts = await readJsonFile();
-        return carts.find((c) => c.userId.$oid === userId) || null;
+        console.log("Carts from JSON:", carts);
+        console.log("Searching for userId:", userId);
+        const cart = carts.find((c) => c.userId.$oid === userId);
+        console.log("Found cart:", cart);
+        return cart || null;
       } catch (error) {
         console.error("Error al obtener el carrito:", error);
         throw error;

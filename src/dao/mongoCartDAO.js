@@ -25,12 +25,7 @@ function createMongoCartDAO() {
     async addProductToUserCart(userId, productId, quantity = 1) {
       try {
         const cart = await this.createCartForUser(userId);
-        let product;
-        if (mongoose.Types.ObjectId.isValid(productId)) {
-          product = await Product.findById(productId);
-        } else {
-          product = await Product.findOne({ id: productId });
-        }
+        let product = await Product.findById(productId);
         if (!product) {
           throw new Error("Producto no encontrado");
         }

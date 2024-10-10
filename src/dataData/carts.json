@@ -58,5 +58,55 @@
     "updatedAt": {
       "$date": "2024-10-10T14:20:45.673Z"
     }
+  },
+  {
+    "_id": {
+      "$oid": "78973bdb-bc55-4d61-a017-483a27267db6"
+    },
+    "userId": {},
+    "products": [
+      {
+        "product": {
+          "$oid": "66c0c00de2e7c185e5b80513"
+        },
+        "quantity": 1,
+        "_id": {
+          "$oid": "d757b517-2845-4f18-92c0-1999699c0189"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2024-10-10T23:22:30.253Z"
+    },
+    "updatedAt": {
+      "$date": "2024-10-10T23:30:04.766Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69c31aa7-3280-41e3-9c99-68b8976fad5e"
+    },
+    "userId": {
+      "$oid": "aabeguier@hotmail.com"
+    },
+    "products": [
+      {
+        "product": {
+          "$oid": "66c0c00de2e7c185e5b80513"
+        },
+        "quantity": 1,
+        "_id": {
+          "$oid": "be8ff3de-c206-472a-a09c-b9d74071b266"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2024-10-10T23:31:54.909Z"
+    },
+    "updatedAt": {
+      "$date": "2024-10-10T23:47:46.640Z"
+    },
+    "__v": 0
   }
 ]

@@ -1,5 +1,3 @@
-// C:\Users\aabeg\Dropbox\1.JavaScript\BACKEND\CoderHouse\Backend I\proyectoCoder\src\services\cart.service.js
-
 import { daoConfig } from "../config/configDao.js";
 import { Product } from "../models/products.model.js";
 import mongoose from "mongoose";
@@ -55,6 +53,12 @@ class CartService {
   async addProductToUserCart(userId, productId, quantity = 1) {
     await this.initializeDAO();
     try {
+      console.log(
+        "Service: Adding product to cart. UserId:",
+        userId,
+        "ProductId:",
+        productId
+      );
       let product;
       if (daoConfig.useJsonStorage) {
         product = await this.getProductFromJson(productId);
