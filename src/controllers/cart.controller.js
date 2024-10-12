@@ -3,22 +3,11 @@ import cartService from "../services/cart.service.js";
 class CartController {
   async addProductToCart(req, res) {
     try {
-      console.log(
-        "req.user en addProductToCart:",
-        JSON.stringify(req.user, null, 2)
-      );
       const userId = req.user.email;
       const productId = req.params.productId;
-      console.log(
-        "Controller: Adding product to cart. UserId:",
-        userId,
-        "ProductId:",
-        productId
-      );
       const cart = await cartService.addProductToUserCart(userId, productId);
       res.status(200).json(cart);
     } catch (error) {
-      console.error("Error en addProductToCart:", error);
       res.status(500).json({ error: error.message });
     }
   }

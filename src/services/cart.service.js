@@ -1,3 +1,4 @@
+import CartRepository from "../repository/cart.repository.js";
 import { daoConfig } from "../config/configDao.js";
 import { Product } from "../models/products.model.js";
 import mongoose from "mongoose";
@@ -6,6 +7,7 @@ import fs from "fs/promises";
 class CartService {
   constructor() {
     this.dao = null;
+    this.cartRepository = null;
   }
 
   async initializeDAO() {
@@ -21,6 +23,7 @@ class CartService {
         );
         this.dao = createMongoCartDAO();
       }
+      this.cartRepository = new CartRepository(this.dao);
     }
   }
 
@@ -42,141 +45,85 @@ class CartService {
 
   async createCartForUser(userId) {
     await this.initializeDAO();
-    try {
-      return await this.dao.createCartForUser(userId);
-    } catch (error) {
-      console.error("Error al crear carrito:", error);
-      throw error;
-    }
+    return await this.cartRepository.createCartForUser(userId);
   }
+
   async addProductToUserCart(userId, productId, quantity = 1) {
     await this.initializeDAO();
-    try {
-      console.log(
-        "Service: Adding product to cart. UserId:",
-        userId,
-        "ProductId:",
-        productId
-      );
-      let product;
-      if (daoConfig.useJsonStorage) {
-        product = await this.getProductFromJson(productId);
-      } else {
-        if (mongoose.Types.ObjectId.isValid(productId)) {
-          product = await Product.findById(productId);
-        } else {
-          product = await Product.findOne({ id: productId });
-        }
-      }
-      if (!product) {
-        console.error(`Producto no encontrado con ID: ${productId}`);
-        throw new Error("Producto no encontrado");
-      }
-
-      // Verificar stock
-      if (product.stock < quantity) {
-        throw new Error("No hay suficiente stock disponible");
-      }
-
-      // Disminuir el stock
-      product.stock -= quantity;
-
-      if (daoConfig.useJsonStorage) {
-        // Actualizar el stock en el archivo JSON
-        const data = await fs.readFile(daoConfig.productJsonFilePath, "utf8");
-        let products = JSON.parse(data);
-        const productIndex = products.findIndex(
-          (p) =>
-            p._id.$oid === productId ||
-            p._id === productId ||
-            p.id.toString() === productId
-        );
-        if (productIndex !== -1) {
-          products[productIndex].stock = product.stock;
-          await fs.writeFile(
-            daoConfig.productJsonFilePath,
-            JSON.stringify(products, null, 2)
-          );
-        }
-      } else {
-        // Guardar el producto actualizado en MongoDB
-        await product.save();
-      }
-
-      const productIdToUse = daoConfig.useJsonStorage
-        ? product._id.$oid || product._id || product.id.toString()
-        : product._id.toString();
-      return await this.dao.addProductToUserCart(
-        userId,
-        productIdToUse,
-        quantity
-      );
-    } catch (error) {
-      console.error("Error al agregar producto al carrito:", error);
-      throw error;
+    let product;
+    if (daoConfig.useJsonStorage) {
+      product = await this.getProductFromJson(productId);
+    } else {
+      product = mongoose.Types.ObjectId.isValid(productId)
+        ? await Product.findById(productId)
+        : await Product.findOne({ id: productId });
     }
+    if (!product) throw new Error("Producto no encontrado");
+    if (product.stock < quantity) throw new Error("No hay suficiente stock");
+
+    product.stock -= quantity;
+
+    if (daoConfig.useJsonStorage) {
+      const data = await fs.readFile(daoConfig.productJsonFilePath, "utf8");
+      const products = JSON.parse(data);
+      const productIndex = products.findIndex(
+        (p) =>
+          p._id.$oid === productId ||
+          p._id === productId ||
+          p.id.toString() === productId
+      );
+      if (productIndex !== -1) {
+        products[productIndex].stock = product.stock;
+        await fs.writeFile(
+          daoConfig.productJsonFilePath,
+          JSON.stringify(products, null, 2)
+        );
+      }
+    } else {
+      await product.save();
+    }
+
+    const productIdToUse = daoConfig.useJsonStorage
+      ? product._id.$oid || product._id || product.id.toString()
+      : product._id.toString();
+    return await this.cartRepository.addProductToUserCart(
+      userId,
+      productIdToUse,
+      quantity
+    );
   }
 
   async getUserCart(userId) {
     await this.initializeDAO();
-    try {
-      const cart = await this.dao.getUserCart(userId);
-      if (!cart) {
-        return { carritos: [], total: 0 };
-      }
+    const cart = await this.cartRepository.getUserCart(userId);
+    if (!cart) return { carritos: [], total: 0 };
 
-      if (daoConfig.useJsonStorage) {
-        for (let item of cart.products) {
-          const product = await this.getProductFromJson(
-            item.product.$oid || item.product
-          );
-          if (product) {
-            item.product = product;
-          }
-        }
-      } else {
-        // Existing MongoDB population logic
+    if (daoConfig.useJsonStorage) {
+      for (const item of cart.products) {
+        const product = await this.getProductFromJson(
+          item.product.$oid || item.product
+        );
+        if (product) item.product = product;
       }
-
-      const total = this.calculateTotal(cart);
-      return { carritos: [cart], total };
-    } catch (error) {
-      console.error("Error al obtener el carrito:", error);
-      throw error;
     }
+
+    const total = this.calculateTotal(cart);
+    return { carritos: [cart], total };
   }
 
   async removeOneProductUnit(userId, productId) {
     await this.initializeDAO();
-    try {
-      return await this.dao.removeOneProductUnit(userId, productId);
-    } catch (error) {
-      console.error(
-        "Error al eliminar una unidad de producto del carrito:",
-        error
-      );
-      throw error;
-    }
+    return await this.cartRepository.removeOneProductUnit(userId, productId);
   }
 
   async emptyCart(userId) {
     await this.initializeDAO();
-    try {
-      return await this.dao.emptyCart(userId);
-    } catch (error) {
-      console.error("Error al vaciar el carrito:", error);
-      throw error;
-    }
+    return await this.cartRepository.emptyCart(userId);
   }
 
   async getCartCount(userId) {
     await this.initializeDAO();
-    try {
-      return await this.dao.getCartCount(userId);
-    } catch (error) {
-      console.error("Error al obtener el conteo del carrito:", error);
-      throw error;
-    }
+    return await this.cartRepository.getCartCount(userId);
   }
 
   calculateTotal(cart) {
