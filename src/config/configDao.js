@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const daoConfig = {
-  useJsonStorage: true, //true usa almacenamiento JSON false usa MongoDB
+  useJsonStorage: false, //true usa almacenamiento JSON false usa MongoDB
   cartJsonFilePath: path.join(__dirname, "..", "dataData", "carts.json"),
   productJsonFilePath: path.join(__dirname, "..", "dataData", "products.json"),
   mongoDbUri: process.env.MONGODB_URI,
