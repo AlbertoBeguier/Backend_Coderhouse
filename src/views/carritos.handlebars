@@ -28,10 +28,15 @@
       <hr />
     {{/each}}
     <button id="empty-cart-btn" class="btn btn-warning" data-cart-id="{{carritos.[0]._id}}">Vaciar Carrito</button>
+  <button id="finalize-purchase-btn" class="btn btn-success" data-cart-id="{{carritos.[0]._id}}">
+      Finalizar Compra
+    </button>
+  
   {{else}}
     <p>No se encontraron productos en tu carrito.</p>
   {{/if}}
 </div>
 
 <script src="/botonEliminarProductoCarrito.js"></script>
+<script src="/botonFinalizarCompra.js"></script>
 
