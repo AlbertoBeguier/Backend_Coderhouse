@@ -1,14 +1,14 @@
 [
   {
-    "_id": "66c0c00de2e7c185e5b80514",
-    "id": 3,
-    "title": "JSON Pc Intel I9 16gb Nvidia 3070 M.2 Render Gamer",
-    "description": "Procesador:\nCPU INTEL CORE I9-14900K RAPTORLAKE S1700 BOX\nMotherboard:\nMotherboard Msi Mag Z790 Tomahawk Max Wifi Ddr5 Intel\nRefrigeracion:\nWater Cooler Cpu Arctic Liquid Freezer Ii 360 Am5 Intel 1700\nMemoria:\nKit Memoria Ram Ddr5 Ram 64gb (2x32gb)black Blade Rgb 6400mhz\nAlmacenamiento:\n-DISCO SSD M.2 de 2tb NVME para Sistema operativo\n- Disco de 4Tb SSD SATA para Back up\nPlaca de video:\n- RTX 4090 24GB GDDR6\nFuente:\n850w Gigabyte PCI EX 5.0\nGabinete Gabinete Gamer Adata Xpg Cruiser",
-    "price": 6350.12,
-    "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_633543-MLA51648535209_092022-O.webp",
-    "code": "abc003",
-    "stock": 2,
-    "updatedAt": "2024-10-10T12:35:18.805Z"
+    "_id": "66c0c00de2e7c185e5b8051d",
+    "id": 12,
+    "title": " JSON  Barra De Sonido LG Sk1 Black 2.0 40w",
+    "description": "Voltaje: 110V/220V. Compatible para conectarse mediante Bluetooth, Óptico, USB-A, Jack 3.5 mm.\nIncluye un parlante: barra de sonido.\nCon formato de audio Dolby Digital, LPCM, AAC, Dolby Audio, MP3, SBC.\nConfiguración de canales en tecnología 2.0.\nReproduce video en formato DVD, Blu-ray.\nDisfrutá de la calidad y el efecto del cine en casa.\nCon control remoto.\nIncluye cables: Óptico.",
+    "price": 283.12,
+    "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_975940-MLU73848606726_012024-O.webp",
+    "code": "abc012",
+    "stock": 3,
+    "updatedAt": "2024-10-10T12:11:21.188Z"
   },
   {
     "_id": "66c0c00de2e7c185e5b8051b",
@@ -18,7 +18,7 @@
     "price": 354.59,
     "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_909752-MLA75257662226_032024-O.webp",
     "code": "abc010",
-    "stock": 4,
+    "stock": 3,
     "updatedAt": "2024-10-10T12:19:37.014Z"
   },
   {

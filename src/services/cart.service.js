@@ -49,7 +49,6 @@ class CartService {
       throw error;
     }
   }
-
   async addProductToUserCart(userId, productId, quantity = 1) {
     await this.initializeDAO();
     try {
@@ -73,6 +72,37 @@ class CartService {
         console.error(`Producto no encontrado con ID: ${productId}`);
         throw new Error("Producto no encontrado");
       }
+
+      // Verificar stock
+      if (product.stock < quantity) {
+        throw new Error("No hay suficiente stock disponible");
+      }
+
+      // Disminuir el stock
+      product.stock -= quantity;
+
+      if (daoConfig.useJsonStorage) {
+        // Actualizar el stock en el archivo JSON
+        const data = await fs.readFile(daoConfig.productJsonFilePath, "utf8");
+        let products = JSON.parse(data);
+        const productIndex = products.findIndex(
+          (p) =>
+            p._id.$oid === productId ||
+            p._id === productId ||
+            p.id.toString() === productId
+        );
+        if (productIndex !== -1) {
+          products[productIndex].stock = product.stock;
+          await fs.writeFile(
+            daoConfig.productJsonFilePath,
+            JSON.stringify(products, null, 2)
+          );
+        }
+      } else {
+        // Guardar el producto actualizado en MongoDB
+        await product.save();
+      }
+
       const productIdToUse = daoConfig.useJsonStorage
         ? product._id.$oid || product._id || product.id.toString()
         : product._id.toString();

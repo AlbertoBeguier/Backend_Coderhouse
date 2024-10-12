@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     console.error("No se encontró el ícono del carrito en el DOM.");
     return;
   }
-
   addToCartButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const productId = this.getAttribute("data-product-id");
@@ -19,7 +18,11 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`/carritos/add/${productId}`, { method: "POST" })
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Error al agregar el producto al carrito");
+            return response.json().then((error) => {
+              throw new Error(
+                error.error || "Error al agregar el producto al carrito"
+              );
+            });
           }
           return response.json();
         })
@@ -37,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((error) => {
           console.error("Error al agregar producto al carrito:", error);
-          alert("Hubo un error al agregar el producto al carrito.");
+          alert(error.message); // Mostramos el mensaje de "sin stock"
         });
     });
   });

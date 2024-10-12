@@ -99,13 +99,31 @@
         "_id": {
           "$oid": "be8ff3de-c206-472a-a09c-b9d74071b266"
         }
+      },
+      {
+        "product": {
+          "$oid": "66c0c00de2e7c185e5b80514"
+        },
+        "quantity": 1,
+        "_id": {
+          "$oid": "f83f1231-60b5-4562-a0ac-eacff771458a"
+        }
+      },
+      {
+        "product": {
+          "$oid": "66c0c00de2e7c185e5b8051b"
+        },
+        "quantity": 1,
+        "_id": {
+          "$oid": "58379b5b-9be2-42f2-9ed9-71def34689c2"
+        }
       }
     ],
     "createdAt": {
       "$date": "2024-10-10T23:31:54.909Z"
     },
     "updatedAt": {
-      "$date": "2024-10-10T23:47:46.640Z"
+      "$date": "2024-10-12T15:15:19.436Z"
     },
     "__v": 0
   }
