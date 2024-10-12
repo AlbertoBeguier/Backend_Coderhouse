@@ -1,0 +1,21 @@
+<div class="container">
+  <h1>SU COMPRA HA FINALIZADO CON EXITO </h1>
+  <h2>Ticket de Compra</h2>
+
+  <p><strong>Código de Ticket:</strong> {{ticket.code}}</p>
+  <p><strong>Fecha de Compra:</strong> {{ticket.purchase_datetime}}</p>
+  <p><strong>Comprador:</strong> {{ticket.purchaser}}</p>
+  <p><strong>Total de la Compra:</strong> ${{formatPrice ticket.amount}}</p>
+
+  <h2>Productos:</h2>
+  <ul>
+    {{#each ticket.products}}
+      <li>{{this.title}}
+        - Cantidad:
+        {{this.quantity}}
+        - Precio: ${{formatPrice this.price}}</li>
+    {{/each}}
+  </ul>
+
+  <a href="/home" class="btn btn-primary">Volver al Inicio</a>
+</div>

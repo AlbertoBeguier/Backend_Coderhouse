@@ -9,7 +9,7 @@
             <li>
               {{product.title}}
               - Cantidad: {{quantity}}
-              - Precio: ${{product.price}}
+              - Precio: ${{formatPrice product.price}}
               <button
                 class="btn btn-danger btn-sm delete-product-btn"
                 data-product-id="{{product._id}}"
@@ -17,18 +17,18 @@
               >
                 Eliminar
               </button>
-              <br />Subtotal: ${{multiply product.price quantity}}
+              <br />Subtotal: ${{formatPrice (multiply product.price quantity)}}
             </li>
           {{/each}}
         </ul>
 
         <!-- Total General del Carrito -->
-        <h3>Total del Carrito: ${{calculateTotal products}}</h3>
+        <h3>Total del Carrito: ${{formatPrice (calculateTotal products)}}</h3>
       </div>
       <hr />
     {{/each}}
     <button id="empty-cart-btn" class="btn btn-warning" data-cart-id="{{carritos.[0]._id}}">Vaciar Carrito</button>
-  <button id="finalize-purchase-btn" class="btn btn-success" data-cart-id="{{carritos.[0]._id}}">
+    <button id="finalize-purchase-btn" class="btn btn-success" data-cart-id="{{carritos.[0]._id}}">
       Finalizar Compra
     </button>
   

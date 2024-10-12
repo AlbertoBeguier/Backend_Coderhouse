@@ -22,5 +22,6 @@ router.delete("/", authMiddleware, CartController.emptyCart);
 
 // Ruta para obtener la cantidad de productos del carrito del usuario
 router.get("/count", authMiddleware, CartController.getCartCount);
+router.post("/:cid/purchase", authMiddleware, CartController.purchaseCart);
 
 export default router;

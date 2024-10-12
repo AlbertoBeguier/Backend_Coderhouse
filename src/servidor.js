@@ -12,6 +12,7 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
 import { configureSocket } from "./config/socket.js";
+import ticketRouter from "./routes/ticket.router.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,6 +48,9 @@ const hbs = create({
     },
     eq: function (v1, v2) {
       return v1 === v2;
+    },
+    formatPrice: function (price) {
+      return price.toFixed(2);
     },
   },
 });
@@ -87,6 +91,7 @@ app.use("/api/carts", cartRouter);
 app.use("/api/sessions", usuarioRouter);
 app.use("/realtimeproducts", realtimeProductRouter);
 app.use("/carritos", cartRouter);
+app.use("/ticket", ticketRouter);
 
 const httpServer = app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);

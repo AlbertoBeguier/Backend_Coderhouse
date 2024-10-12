@@ -90,31 +90,12 @@
     "userId": {
       "$oid": "aabeguier@hotmail.com"
     },
-    "products": [
-      {
-        "product": {
-          "$oid": "66c0c00de2e7c185e5b8051d"
-        },
-        "quantity": 1,
-        "_id": {
-          "$oid": "c7ce32b6-8215-4d87-9b05-1c075bcc7d8d"
-        }
-      },
-      {
-        "product": {
-          "$oid": "66c0c00de2e7c185e5b8051b"
-        },
-        "quantity": 15,
-        "_id": {
-          "$oid": "09a4c156-8d1c-49b3-8a7c-459fac93eb0c"
-        }
-      }
-    ],
+    "products": [],
     "createdAt": {
       "$date": "2024-10-10T23:31:54.909Z"
     },
     "updatedAt": {
-      "$date": "2024-10-12T17:10:01.960Z"
+      "$date": "2024-10-12T18:44:27.083Z"
     },
     "__v": 0
   }
