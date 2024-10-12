@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const addToCartButtons = document.querySelectorAll(".add-to-cart-btn"); // Cambiado a clase
+  const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
   const cartIcon = document.getElementById("cart-count");
 
   if (!cartIcon) {
     console.error("No se encontró el ícono del carrito en el DOM.");
     return;
   }
+
   addToCartButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const productId = this.getAttribute("data-product-id");
@@ -18,11 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`/carritos/add/${productId}`, { method: "POST" })
         .then((response) => {
           if (!response.ok) {
-            return response.json().then((error) => {
-              throw new Error(
-                error.error || "Error al agregar el producto al carrito"
-              );
-            });
+            throw new Error("Error al agregar el producto al carrito");
           }
           return response.json();
         })
@@ -37,10 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
             cartIcon.textContent = 0;
           }
           alert("Producto agregado al carrito");
+
+          // Recargar la página para mostrar el stock actualizado
+          window.location.reload();
         })
         .catch((error) => {
           console.error("Error al agregar producto al carrito:", error);
-          alert(error.message); // Mostramos el mensaje de "sin stock"
+          alert("Hubo un error al agregar el producto al carrito.");
         });
     });
   });

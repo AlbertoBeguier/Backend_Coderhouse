@@ -41,7 +41,21 @@ class ProductController {
     try {
       const product = await productService.getProductById(req.params.pid);
       if (product) {
-        res.render("product", { title: product.title, product });
+        if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+          // Si es una solicitud AJAX, devolver solo el HTML parcial
+          res.render("partials/producto-detalle", { product }, (err, html) => {
+            if (err) {
+              res
+                .status(500)
+                .send({ error: "Error al renderizar el producto" });
+            } else {
+              res.send(html);
+            }
+          });
+        } else {
+          // Si es una solicitud normal, renderizar la página completa
+          res.render("product", { title: product.title, product });
+        }
       } else {
         res.status(404).send({ error: "Producto no encontrado" });
       }
