@@ -10,3 +10,5 @@ Hola estimados, comento el proyecto para que les resulte más sencilla la correc
 7. Se ha creado el modelo Ticket con todas las formalidades requeridas
 8. En relacion al stock del producto al ir agregando los pruductos al carrito el stock se va a actualizando por lo que si el stock es 0 no se puede agregar directamente al carrito, me ha parecido mejor así que como se solicita.
 9. Por lo antes dicho , el carrito al finalizaqr la compra estará vació ya que nunca existiran productos dentro de él que no puedan comprarse.
+10. Las varibles de entorno las he utilizado para Mongo
+11. el archivo git ignore contiene las variables de entorno para que no se suban a git

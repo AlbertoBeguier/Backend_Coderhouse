@@ -58,7 +58,7 @@ class UserController {
   }
 
   admin(req, res) {
-    console.log("User data in /admin route:", req.user); // Añadimos esta línea para depuración
+    console.log("User data in /admin route:", req.user); // depuración
     if (req.user.role !== "admin") {
       return res
         .status(403)

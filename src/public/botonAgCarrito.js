@@ -29,13 +29,12 @@ document.addEventListener("DOMContentLoaded", function () {
               (acc, product) => acc + product.quantity,
               0
             );
-            cartIcon.textContent = cartCount; // Actualiza el contador de productos
+            cartIcon.textContent = cartCount;
           } else {
             cartIcon.textContent = 0;
           }
           alert("Producto agregado al carrito");
 
-          // Recargar la página para mostrar el stock actualizado
           window.location.reload();
         })
         .catch((error) => {

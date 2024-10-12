@@ -28,7 +28,7 @@ class UserService {
     const nuevoUsuario = new UserModel({
       ...userDTO,
       password,
-      full_name: userDTO.full_name, // Usamos el fullname generado por el DTO
+      full_name: userDTO.full_name,
     });
 
     await nuevoUsuario.save();

@@ -4,7 +4,6 @@ import TicketModel from "../models/ticket.model.js";
 
 class TicketService {
   constructor() {
-    // Aquí estás inicializando el ticketRepository correctamente
     this.ticketRepository = new TicketRepository(new TicketDAO(TicketModel));
   }
 

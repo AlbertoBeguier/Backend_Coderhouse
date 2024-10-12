@@ -1,5 +1,3 @@
-// C:\Users\aabeg\Dropbox\1.JavaScript\BACKEND\CoderHouse\Backend I\proyectoCoder\src\dao\cartDAO.js
-
 /**
  * @typedef {Object} CartDAO
  * @property {function(string): Promise<Object>} createCartForUser

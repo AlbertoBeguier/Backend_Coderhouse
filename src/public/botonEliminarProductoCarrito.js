@@ -1,14 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
   const deleteButtons = document.querySelectorAll(".delete-product-btn");
   const emptyCartButton = document.getElementById("empty-cart-btn");
-  const cartIcon = document.getElementById("cart-count"); // Cambiado a ID
+  const cartIcon = document.getElementById("cart-count");
 
   if (!cartIcon) {
     console.error("No se encontró el ícono del carrito en el DOM.");
     return;
   }
 
-  // Eliminar producto del carrito
   deleteButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const productId = this.getAttribute("data-product-id");
@@ -25,9 +24,9 @@ document.addEventListener("DOMContentLoaded", function () {
             (acc, product) => acc + product.quantity,
             0
           );
-          cartIcon.textContent = cartCount; // Actualiza el contador de productos
+          cartIcon.textContent = cartCount;
           alert("Producto eliminado del carrito");
-          location.reload(); // Recargar la página para reflejar los cambios
+          location.reload();
         })
         .catch((error) => {
           console.error("Error al eliminar producto del carrito:", error);
@@ -47,9 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
           return response.json();
         })
         .then(() => {
-          cartIcon.textContent = 0; // Actualiza el contador a cero
+          cartIcon.textContent = 0;
           alert("Carrito vaciado");
-          location.reload(); // Recargar la página después de vaciar el carrito
+          location.reload();
         })
         .catch((error) => {
           console.error("Error al vaciar el carrito:", error);
