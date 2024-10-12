@@ -42,7 +42,6 @@ class ProductController {
       const product = await productService.getProductById(req.params.pid);
       if (product) {
         if (req.headers["x-requested-with"] === "XMLHttpRequest") {
-          // Si es una solicitud AJAX, devolver solo el HTML parcial
           res.render("partials/producto-detalle", { product }, (err, html) => {
             if (err) {
               res
@@ -53,7 +52,6 @@ class ProductController {
             }
           });
         } else {
-          // Si es una solicitud normal, renderizar la página completa
           res.render("product", { title: product.title, product });
         }
       } else {
@@ -104,3 +102,4 @@ class ProductController {
 }
 
 export default new ProductController();
+

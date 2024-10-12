@@ -1,12 +1,12 @@
-// C:\Users\aabeg\Dropbox\1.JavaScript\BACKEND\CoderHouse\Backend I\proyectoCoder\src\services\product.service.js
-
+import ProductRepository from "../repository/product.repository.js";
 import { Product } from "../models/products.model.js";
-import database from "../config/database.js";
 import { daoConfig } from "../config/configDao.js";
+import database from "../config/database.js";
 
 class ProductService {
   constructor() {
     this.dao = null;
+    this.productRepository = null;
     database;
   }
 
@@ -23,97 +23,38 @@ class ProductService {
         );
         this.dao = createMongoProductDAO();
       }
+      this.productRepository = new ProductRepository(this.dao);
     }
   }
 
   async getAllProducts(sortOrder) {
     await this.initializeDAO();
-    try {
-      if (daoConfig.useJsonStorage) {
-        return await this.dao.getAllProducts(sortOrder);
-      } else {
-        return await Product.find().sort({ price: sortOrder });
-      }
-    } catch (error) {
-      console.error("Error al obtener productos:", error);
-      throw error;
-    }
+    return await this.productRepository.getAllProducts(sortOrder);
   }
 
   async getProductsPaginated(page, limit) {
     await this.initializeDAO();
-    try {
-      const options = {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        lean: true,
-      };
-      if (daoConfig.useJsonStorage) {
-        return await this.dao.getProductsPaginated(page, limit);
-      } else {
-        return await Product.paginate({}, options);
-      }
-    } catch (error) {
-      console.error("Error al obtener productos paginados:", error);
-      throw error;
-    }
+    return await this.productRepository.getProductsPaginated(page, limit);
   }
 
   async getProductById(id) {
     await this.initializeDAO();
-    try {
-      if (daoConfig.useJsonStorage) {
-        return await this.dao.getProductById(id);
-      } else {
-        return await Product.findById(id);
-      }
-    } catch (error) {
-      console.error("Error al obtener producto por ID:", error);
-      throw error;
-    }
+    return await this.productRepository.getProductById(id);
   }
 
   async createProduct(productData) {
     await this.initializeDAO();
-    try {
-      if (daoConfig.useJsonStorage) {
-        return await this.dao.createProduct(productData);
-      } else {
-        const newProduct = new Product(productData);
-        return await newProduct.save();
-      }
-    } catch (error) {
-      console.error("Error al crear producto:", error);
-      throw error;
-    }
+    return await this.productRepository.createProduct(productData);
   }
 
   async deleteProduct(id) {
     await this.initializeDAO();
-    try {
-      if (daoConfig.useJsonStorage) {
-        return await this.dao.deleteProduct(id);
-      } else {
-        return await Product.findByIdAndDelete(id);
-      }
-    } catch (error) {
-      console.error("Error al eliminar producto:", error);
-      throw error;
-    }
+    return await this.productRepository.deleteProduct(id);
   }
 
   async updateProduct(id, updateData) {
     await this.initializeDAO();
-    try {
-      if (daoConfig.useJsonStorage) {
-        return await this.dao.updateProduct(id, updateData);
-      } else {
-        return await Product.findByIdAndUpdate(id, updateData, { new: true });
-      }
-    } catch (error) {
-      console.error("Error al actualizar producto:", error);
-      throw error;
-    }
+    return await this.productRepository.updateProduct(id, updateData);
   }
 }
 
